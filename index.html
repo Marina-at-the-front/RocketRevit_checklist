@@ -162,6 +162,15 @@
             background: #616161;
         }
         
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #45a049;
+        }
+        
         .btn-danger {
             background: #f44336;
             color: white;
@@ -196,11 +205,34 @@
             font-size: 1.3em;
             font-weight: bold;
             color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
         
         .section-progress {
             font-size: 0.9em;
             color: #666;
+        }
+        
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background 0.2s;
+            font-size: 18px;
+        }
+        
+        .icon-btn:hover {
+            background: rgba(0,0,0,0.1);
         }
         
         .section-content {
@@ -218,6 +250,8 @@
             padding: 12px 0;
             border-bottom: 1px solid #f0f0f0;
             transition: background 0.2s ease;
+            position: relative;
+            group: item;
         }
         
         .checklist-item:last-child {
@@ -226,6 +260,10 @@
         
         .checklist-item:hover {
             background: #f9f9f9;
+        }
+        
+        .checklist-item:hover .item-actions {
+            opacity: 1;
         }
         
         .checklist-item input[type="checkbox"] {
@@ -246,16 +284,143 @@
             color: #999;
         }
         
-        .budget-section {
-            background: #f0f7ff;
-            padding: 30px;
-            border-radius: 8px;
-            margin-top: 40px;
+        .item-actions {
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.2s;
         }
         
-        .budget-section h2 {
-            color: #1976D2;
-            margin-bottom: 20px;
+        .comment-indicator {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #FFF3CD;
+            color: #856404;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .comment-indicator:hover {
+            background: #FFE69C;
+            transform: scale(1.1);
+        }
+        
+        .comment-section {
+            margin-top: 10px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 3px solid #2196F3;
+        }
+        
+        .comment {
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .comment-author {
+            font-weight: bold;
+            color: #2196F3;
+            font-size: 14px;
+        }
+        
+        .comment-date {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .comment-text {
+            color: #333;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .comment-input-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .comment-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 40px;
+        }
+        
+        .comment-input:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+        
+        .author-input {
+            width: 150px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .delete-comment {
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 12px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .delete-comment:hover {
+            opacity: 1;
+        }
+        
+        .edit-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #2196F3;
+            border-radius: 3px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        
+        .add-item-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .add-item-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .add-item-input:focus {
+            outline: none;
+            border-color: #2196F3;
         }
         
         .stats {
@@ -364,6 +529,29 @@
             font-size: 14px;
         }
         
+        .edit-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-mode-toggle.active {
+            background: #4CAF50;
+        }
+        
+        .edit-mode-toggle:hover {
+            transform: scale(1.05);
+        }
+        
         @media print {
             body {
                 background: white;
@@ -376,8 +564,12 @@
             }
             
             .controls,
-            .sync-status {
-                display: none;
+            .sync-status,
+            .item-actions,
+            .add-item-container,
+            .edit-mode-toggle,
+            .icon-btn {
+                display: none !important;
             }
             
             .section-content {
@@ -412,6 +604,11 @@
                 right: 10px;
                 font-size: 12px;
             }
+            
+            .logo {
+                width: 200px;
+                height: 60px;
+            }
         }
     </style>
 </head>
@@ -421,7 +618,7 @@
         <span id="syncText">Подключение...</span>
     </div>
     
-    <div class="setup-modal" id="setupModal">
+    <div class="setup-modal" id="setupModal" style="display: none;">
         <div class="setup-content">
             <h2>Настройка синхронизации</h2>
             
@@ -507,15 +704,14 @@
         </div>
         
         <div id="sections"></div>
-        
-        <div class="budget-section">
-            <h2>📋 Примерный бюджет</h2>
-            <p>Бюджет рассчитывается индивидуально в зависимости от масштаба запуска и выбранных каналов продвижения.</p>
-        </div>
     </div>
     
+    <button class="edit-mode-toggle" id="editModeToggle" onclick="toggleEditMode()">
+        ✏️ Режим редактирования
+    </button>
+    
     <script>
-        const checklistData = [
+        let checklistData = [
             {
                 title: "🎯 1. Стратегия и позиционирование",
                 items: [
@@ -732,9 +928,12 @@
         ];
         
         let checkedItems = {};
+        let itemComments = {};
         let database = null;
         let isOnline = false;
         let useLocal = false;
+        let isEditMode = false;
+        let currentUserName = localStorage.getItem('rocketRevitUserName') || '';
         
         // Check for saved Firebase config
         function checkFirebaseConfig() {
@@ -781,8 +980,19 @@
         function loadFromFirebase() {
             if (!database) return;
             
-            const checklistRef = database.ref('rocketrevit-checklist');
+            // Load checklist structure
+            const structureRef = database.ref('rocketrevit-structure');
+            structureRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    checklistData = data;
+                    renderSections();
+                    updateProgress();
+                }
+            });
             
+            // Load checked items
+            const checklistRef = database.ref('rocketrevit-checklist');
             checklistRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 const needsFullRender = !document.getElementById('sections').innerHTML;
@@ -804,6 +1014,28 @@
                 updateProgress();
                 updateSyncStatus();
             });
+            
+            // Load comments
+            const commentsRef = database.ref('rocketrevit-comments');
+            commentsRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    itemComments = data;
+                } else {
+                    itemComments = {};
+                }
+                updateCommentsDisplay();
+            });
+        }
+        
+        // Save structure to Firebase
+        function saveStructureToFirebase() {
+            if (!database || !isOnline) return;
+            
+            database.ref('rocketrevit-structure').set(checklistData)
+                .catch((error) => {
+                    console.error('Save structure error:', error);
+                });
         }
         
         // Update checkboxes without re-rendering sections
@@ -896,10 +1128,21 @@
         
         // Load from local storage
         function loadFromLocal() {
+            const savedStructure = localStorage.getItem('rocketRevitStructure');
+            if (savedStructure) {
+                checklistData = JSON.parse(savedStructure);
+            }
+            
             const saved = localStorage.getItem('rocketRevitChecklist');
             if (saved) {
                 checkedItems = JSON.parse(saved);
             }
+            
+            const savedComments = localStorage.getItem('rocketRevitComments');
+            if (savedComments) {
+                itemComments = JSON.parse(savedComments);
+            }
+            
             renderSections();
             updateProgress();
         }
@@ -907,6 +1150,8 @@
         // Save to local storage
         function saveToLocal() {
             localStorage.setItem('rocketRevitChecklist', JSON.stringify(checkedItems));
+            localStorage.setItem('rocketRevitStructure', JSON.stringify(checklistData));
+            localStorage.setItem('rocketRevitComments', JSON.stringify(itemComments));
         }
         
         // Show setup modal
@@ -923,6 +1168,109 @@
                     localStorage.removeItem('rocketRevitChecklist');
                 } else if (database) {
                     database.ref('rocketrevit-checklist').set({});
+                }
+                
+                renderSections();
+                updateProgress();
+            }
+        }
+        
+        // Toggle edit mode
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const btn = document.getElementById('editModeToggle');
+            
+            if (isEditMode) {
+                btn.classList.add('active');
+                btn.innerHTML = '✓ Сохранить изменения';
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '✏️ Режим редактирования';
+            }
+            
+            renderSections();
+        }
+        
+        // Add new item
+        function addItem(sectionIndex) {
+            const input = document.getElementById(`add-input-${sectionIndex}`);
+            const text = input.value.trim();
+            
+            if (text) {
+                checklistData[sectionIndex].items.push(text);
+                input.value = '';
+                
+                if (useLocal) {
+                    saveToLocal();
+                } else {
+                    saveStructureToFirebase();
+                }
+                
+                renderSections();
+                updateProgress();
+            }
+        }
+        
+        // Edit item
+        function editItem(sectionIndex, itemIndex) {
+            const item = checklistData[sectionIndex].items[itemIndex];
+            const container = document.getElementById(`item-container-${sectionIndex}-${itemIndex}`);
+            
+            container.innerHTML = `
+                <input type="text" class="edit-input" id="edit-${sectionIndex}-${itemIndex}" value="${item.replace(/"/g, '&quot;')}">
+                <button class="icon-btn" onclick="saveEdit(${sectionIndex}, ${itemIndex})">✓</button>
+                <button class="icon-btn" onclick="cancelEdit(${sectionIndex}, ${itemIndex})">✗</button>
+            `;
+            
+            document.getElementById(`edit-${sectionIndex}-${itemIndex}`).focus();
+        }
+        
+        // Save edit
+        function saveEdit(sectionIndex, itemIndex) {
+            const input = document.getElementById(`edit-${sectionIndex}-${itemIndex}`);
+            const newText = input.value.trim();
+            
+            if (newText) {
+                checklistData[sectionIndex].items[itemIndex] = newText;
+                
+                if (useLocal) {
+                    saveToLocal();
+                } else {
+                    saveStructureToFirebase();
+                }
+                
+                renderSections();
+            }
+        }
+        
+        // Cancel edit
+        function cancelEdit(sectionIndex, itemIndex) {
+            renderSections();
+        }
+        
+        // Delete item
+        function deleteItem(sectionIndex, itemIndex) {
+            if (confirm('Удалить этот пункт?')) {
+                // Remove item
+                checklistData[sectionIndex].items.splice(itemIndex, 1);
+                
+                // Update checked items keys
+                const newCheckedItems = {};
+                Object.keys(checkedItems).forEach(key => {
+                    const [secIdx, itemIdx] = key.split('-').map(Number);
+                    if (secIdx === sectionIndex && itemIdx > itemIndex) {
+                        newCheckedItems[`${secIdx}-${itemIdx - 1}`] = checkedItems[key];
+                    } else if (secIdx !== sectionIndex || itemIdx !== itemIndex) {
+                        newCheckedItems[key] = checkedItems[key];
+                    }
+                });
+                checkedItems = newCheckedItems;
+                
+                if (useLocal) {
+                    saveToLocal();
+                } else {
+                    saveStructureToFirebase();
+                    saveToFirebase();
                 }
                 
                 renderSections();
@@ -1005,6 +1353,149 @@
             window.print();
         }
         
+        // Add comment functions
+        function toggleComments(sectionIndex, itemIndex) {
+            const key = `${sectionIndex}-${itemIndex}`;
+            const commentsDiv = document.getElementById(`comments-${key}`);
+            
+            if (commentsDiv.style.display === 'none') {
+                commentsDiv.style.display = 'block';
+                // Focus on author input if no name saved
+                if (!currentUserName) {
+                    const authorInput = document.getElementById(`author-${key}`);
+                    if (authorInput) authorInput.focus();
+                } else {
+                    const commentInput = document.getElementById(`comment-input-${key}`);
+                    if (commentInput) commentInput.focus();
+                }
+            } else {
+                commentsDiv.style.display = 'none';
+            }
+        }
+        
+        function addComment(sectionIndex, itemIndex) {
+            const key = `${sectionIndex}-${itemIndex}`;
+            const authorInput = document.getElementById(`author-${key}`);
+            const commentInput = document.getElementById(`comment-input-${key}`);
+            
+            const author = authorInput.value.trim() || 'Аноним';
+            const text = commentInput.value.trim();
+            
+            if (text) {
+                // Save user name
+                currentUserName = author;
+                localStorage.setItem('rocketRevitUserName', currentUserName);
+                
+                if (!itemComments[key]) {
+                    itemComments[key] = [];
+                }
+                
+                const comment = {
+                    id: Date.now(),
+                    author: author,
+                    text: text,
+                    date: new Date().toISOString()
+                };
+                
+                itemComments[key].push(comment);
+                
+                // Clear input
+                commentInput.value = '';
+                
+                // Save
+                if (useLocal) {
+                    saveToLocal();
+                } else {
+                    saveCommentsToFirebase();
+                }
+                
+                // Re-render comments
+                renderComments(sectionIndex, itemIndex);
+                updateCommentIndicator(sectionIndex, itemIndex);
+            }
+        }
+        
+        function deleteComment(sectionIndex, itemIndex, commentId) {
+            if (confirm('Удалить комментарий?')) {
+                const key = `${sectionIndex}-${itemIndex}`;
+                if (itemComments[key]) {
+                    itemComments[key] = itemComments[key].filter(c => c.id !== commentId);
+                    if (itemComments[key].length === 0) {
+                        delete itemComments[key];
+                    }
+                    
+                    if (useLocal) {
+                        saveToLocal();
+                    } else {
+                        saveCommentsToFirebase();
+                    }
+                    
+                    renderComments(sectionIndex, itemIndex);
+                    updateCommentIndicator(sectionIndex, itemIndex);
+                }
+            }
+        }
+        
+        function saveCommentsToFirebase() {
+            if (!database || !isOnline) return;
+            
+            database.ref('rocketrevit-comments').set(itemComments)
+                .catch((error) => {
+                    console.error('Save comments error:', error);
+                });
+        }
+        
+        function renderComments(sectionIndex, itemIndex) {
+            const key = `${sectionIndex}-${itemIndex}`;
+            const commentsContainer = document.getElementById(`comments-list-${key}`);
+            
+            if (!commentsContainer) return;
+            
+            const comments = itemComments[key] || [];
+            
+            commentsContainer.innerHTML = comments.map(comment => {
+                const date = new Date(comment.date);
+                const dateStr = date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                
+                return `
+                    <div class="comment">
+                        <div class="comment-header">
+                            <span class="comment-author">${comment.author}</span>
+                            <div>
+                                <span class="comment-date">${dateStr}</span>
+                                ${isEditMode ? `<span class="delete-comment" onclick="deleteComment(${sectionIndex}, ${itemIndex}, ${comment.id})"> 🗑️</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="comment-text">${comment.text.replace(/\n/g, '<br>')}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateCommentIndicator(sectionIndex, itemIndex) {
+            const key = `${sectionIndex}-${itemIndex}`;
+            const indicator = document.getElementById(`comment-indicator-${key}`);
+            
+            if (!indicator) return;
+            
+            const comments = itemComments[key] || [];
+            if (comments.length > 0) {
+                indicator.style.display = 'inline-flex';
+                indicator.textContent = comments.length;
+            } else {
+                indicator.style.display = 'none';
+            }
+        }
+        
+        function updateCommentsDisplay() {
+            checklistData.forEach((section, sectionIndex) => {
+                section.items.forEach((item, itemIndex) => {
+                    updateCommentIndicator(sectionIndex, itemIndex);
+                    renderComments(sectionIndex, itemIndex);
+                });
+            });
+        }
+        
         function renderSections() {
             const container = document.getElementById('sections');
             container.innerHTML = '';
@@ -1018,30 +1509,85 @@
                     checkedItems[`${sectionIndex}-${itemIndex}`]
                 ).length;
                 
-                sectionDiv.innerHTML = `
+                let sectionHTML = `
                     <div class="section-header" onclick="toggleSection(${sectionIndex})">
                         <span class="section-title">${section.title}</span>
-                        <span class="section-progress" id="progress-${sectionIndex}">${sectionChecked}/${section.items.length}</span>
+                        <div class="section-actions">
+                            <span class="section-progress" id="progress-${sectionIndex}">${sectionChecked}/${section.items.length}</span>
+                        </div>
                     </div>
                     <div class="section-content">
-                        ${section.items.map((item, itemIndex) => {
-                            const key = `${sectionIndex}-${itemIndex}`;
-                            const isChecked = checkedItems[key] || false;
-                            return `
-                                <div class="checklist-item">
-                                    <input type="checkbox" 
-                                           id="item-${key}" 
-                                           ${isChecked ? 'checked' : ''}
-                                           onchange="toggleItem(${sectionIndex}, ${itemIndex})">
-                                    <label for="item-${key}">${itemIndex + 1}. ${item}</label>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
                 `;
                 
+                // Render items
+                section.items.forEach((item, itemIndex) => {
+                    const key = `${sectionIndex}-${itemIndex}`;
+                    const isChecked = checkedItems[key] || false;
+                    const comments = itemComments[key] || [];
+                    
+                    sectionHTML += `
+                        <div class="checklist-item" id="item-container-${key}">
+                            <input type="checkbox" 
+                                   id="item-${key}" 
+                                   ${isChecked ? 'checked' : ''}
+                                   onchange="toggleItem(${sectionIndex}, ${itemIndex})">
+                            <label for="item-${key}">${itemIndex + 1}. ${item}</label>
+                            <span class="comment-indicator" 
+                                  id="comment-indicator-${key}" 
+                                  onclick="toggleComments(${sectionIndex}, ${itemIndex})"
+                                  title="Комментарии"
+                                  style="${comments.length > 0 ? '' : 'display: none;'}">
+                                ${comments.length}
+                            </span>
+                            <div class="item-actions">
+                                <button class="icon-btn" onclick="toggleComments(${sectionIndex}, ${itemIndex})" title="Комментарии">💬</button>
+                                ${isEditMode ? `
+                                    <button class="icon-btn" onclick="editItem(${sectionIndex}, ${itemIndex})" title="Редактировать">✏️</button>
+                                    <button class="icon-btn" onclick="deleteItem(${sectionIndex}, ${itemIndex})" title="Удалить">🗑️</button>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <div class="comment-section" id="comments-${key}" style="display: none;">
+                            <div id="comments-list-${key}"></div>
+                            <div class="comment-input-container">
+                                <input type="text" 
+                                       class="author-input" 
+                                       id="author-${key}" 
+                                       placeholder="Ваше имя" 
+                                       value="${currentUserName}"
+                                       onkeypress="if(event.key==='Enter') document.getElementById('comment-input-${key}').focus()">
+                                <textarea class="comment-input" 
+                                          id="comment-input-${key}" 
+                                          placeholder="Добавить комментарий..."
+                                          onkeypress="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); addComment(${sectionIndex}, ${itemIndex}); }"></textarea>
+                                <button class="btn-primary" onclick="addComment(${sectionIndex}, ${itemIndex})">Отправить</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                // Add new item input (only in edit mode)
+                if (isEditMode) {
+                    sectionHTML += `
+                        <div class="add-item-container">
+                            <input type="text" 
+                                   class="add-item-input" 
+                                   id="add-input-${sectionIndex}" 
+                                   placeholder="Добавить новый пункт..."
+                                   onkeypress="if(event.key==='Enter') addItem(${sectionIndex})">
+                            <button class="btn-success" onclick="addItem(${sectionIndex})">+ Добавить</button>
+                        </div>
+                    `;
+                }
+                
+                sectionHTML += '</div>';
+                sectionDiv.innerHTML = sectionHTML;
                 container.appendChild(sectionDiv);
             });
+            
+            // Update checkboxes state and render comments
+            updateCheckboxes();
+            updateCommentsDisplay();
         }
         
         // Initialize
