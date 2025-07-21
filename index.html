@@ -473,7 +473,7 @@
     
     <div class="container">
         <div class="header">
-            <div class="logo"></div>
+            <div class="logo">     <img src="горизонтальный RR (1).svg"></img></div>
             <h1>🚀 RocketRevit - Маркетинг Чек-лист</h1>
             <p class="subtitle">План запуска продукта</p>
             <p class="slogan">"Работа проектировщика - творить и созидать, оформление оставьте нам"</p>
@@ -785,14 +785,47 @@
             
             checklistRef.on('value', (snapshot) => {
                 const data = snapshot.val();
+                const needsFullRender = !document.getElementById('sections').innerHTML;
+                
                 if (data) {
                     checkedItems = data;
                 } else {
                     checkedItems = {};
                 }
-                renderSections();
+                
+                // Only render sections if they don't exist yet
+                if (needsFullRender) {
+                    renderSections();
+                } else {
+                    // Just update checkboxes without re-rendering
+                    updateCheckboxes();
+                }
+                
                 updateProgress();
                 updateSyncStatus();
+            });
+        }
+        
+        // Update checkboxes without re-rendering sections
+        function updateCheckboxes() {
+            checklistData.forEach((section, sectionIndex) => {
+                section.items.forEach((item, itemIndex) => {
+                    const key = `${sectionIndex}-${itemIndex}`;
+                    const checkbox = document.getElementById(`item-${key}`);
+                    if (checkbox) {
+                        const label = checkbox.nextElementSibling;
+                        const isChecked = checkedItems[key] || false;
+                        
+                        checkbox.checked = isChecked;
+                        if (isChecked) {
+                            label.style.textDecoration = 'line-through';
+                            label.style.color = '#999';
+                        } else {
+                            label.style.textDecoration = 'none';
+                            label.style.color = '#333';
+                        }
+                    }
+                });
             });
         }
         
@@ -943,6 +976,20 @@
         function toggleItem(sectionIndex, itemIndex) {
             const key = `${sectionIndex}-${itemIndex}`;
             checkedItems[key] = !checkedItems[key];
+            
+            // Update only the checkbox and label without re-rendering
+            const checkbox = document.getElementById(`item-${key}`);
+            const label = checkbox.nextElementSibling;
+            
+            if (checkedItems[key]) {
+                checkbox.checked = true;
+                label.style.textDecoration = 'line-through';
+                label.style.color = '#999';
+            } else {
+                checkbox.checked = false;
+                label.style.textDecoration = 'none';
+                label.style.color = '#333';
+            }
             
             updateProgress();
             
