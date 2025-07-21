@@ -1413,18 +1413,19 @@
             });
         }
         
-        // Save to Firebase
-        function saveToFirebase() {
+        // Save all data to Firebase
+        function saveAllToFirebase() {
             if (!database || !isOnline) return;
             
             updateSyncStatus('syncing');
             
             Promise.all([
-                database.ref('rocketrevit-checklist').set(checkedItems),
-                database.ref('rocketrevit-assignees').set(itemAssignees),
-                database.ref('rocketrevit-duedates').set(itemDueDates),
-                database.ref('rocketrevit-priorities').set(itemPriorities),
-                database.ref('rocketrevit-executions').set(itemExecutions)
+                database.ref('rocketrevit-checklist').set(checkedItems || {}),
+                database.ref('rocketrevit-assignees').set(itemAssignees || {}),
+                database.ref('rocketrevit-duedates').set(itemDueDates || {}),
+                database.ref('rocketrevit-priorities').set(itemPriorities || {}),
+                database.ref('rocketrevit-executions').set(itemExecutions || {}),
+                database.ref('rocketrevit-comments').set(itemComments || {})
             ])
             .then(() => {
                 updateSyncStatus();
@@ -1750,7 +1751,7 @@
             if (useLocal) {
                 saveToLocal();
             } else {
-                saveExecutionsToFirebase();
+                saveAllToFirebase();
             }
             
             updateProgress();
@@ -1777,7 +1778,7 @@
             if (useLocal) {
                 saveToLocal();
             } else {
-                saveAssigneesToFirebase();
+                saveAllToFirebase();
             }
         }
         
@@ -1799,7 +1800,7 @@
             if (useLocal) {
                 saveToLocal();
             } else {
-                saveDueDatesToFirebase();
+                saveAllToFirebase();
             }
         }
         
@@ -1842,7 +1843,7 @@
             if (useLocal) {
                 saveToLocal();
             } else {
-                savePrioritiesToFirebase();
+                saveAllToFirebase();
             }
         }
         
@@ -2080,7 +2081,7 @@
             if (useLocal) {
                 saveToLocal();
             } else {
-                saveToFirebase();
+                saveAllToFirebase();
             }
         }
         
@@ -2141,7 +2142,7 @@
                 if (useLocal) {
                     saveToLocal();
                 } else {
-                    saveCommentsToFirebase();
+                    saveAllToFirebase();
                 }
                 
                 // Re-render comments
@@ -2162,7 +2163,7 @@
                     if (useLocal) {
                         saveToLocal();
                     } else {
-                        saveCommentsToFirebase();
+                        saveAllToFirebase();
                     }
                     
                     renderComments(sectionIndex, itemIndex);
