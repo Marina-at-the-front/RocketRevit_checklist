@@ -399,29 +399,50 @@
         .item-actions {
             display: flex;
             gap: 5px;
-            opacity: 0;
-            transition: opacity 0.2s;
         }
         
-        .comment-indicator {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            background: #FFF3CD;
-            color: #856404;
-            border-radius: 50%;
-            font-size: 12px;
-            font-weight: bold;
-            margin-left: 10px;
+        .comment-btn {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            color: #666;
+            padding: 4px 8px;
+            border-radius: 4px;
             cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
             transition: all 0.2s;
         }
         
-        .comment-indicator:hover {
-            background: #FFE69C;
-            transform: scale(1.1);
+        .comment-btn:hover {
+            background: #e8e8e8;
+            border-color: #bbb;
+        }
+        
+        .comment-btn.has-comments {
+            background: #FFF3CD;
+            border-color: #FFE69C;
+            color: #856404;
+        }
+        
+        .last-comment-preview {
+            font-size: 12px;
+            color: #666;
+            margin-left: 10px;
+            font-style: italic;
+            cursor: pointer;
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .last-comment-preview:hover {
+            color: #2196F3;
+            text-decoration: underline;
         }
         
         .comment-section {
@@ -1753,6 +1774,15 @@
         
         // Check due date status
         function checkDueDateStatus(itemEl, dueDate) {
+            const key = itemEl.id.replace('item-container-', '');
+            const isChecked = checkedItems[key] || false;
+            
+            // If task is completed, don't mark as overdue
+            if (isChecked) {
+                itemEl.classList.remove('overdue', 'due-soon');
+                return;
+            }
+            
             const today = new Date();
             const due = new Date(dueDate);
             const diffTime = due - today;
@@ -1985,15 +2015,23 @@
             // Update only the checkbox and item text without re-rendering
             const checkbox = document.getElementById(`item-${key}`);
             const itemText = checkbox.nextElementSibling;
+            const itemContainer = document.getElementById(`item-container-${key}`);
             
             if (checkedItems[key]) {
                 checkbox.checked = true;
                 itemText.style.textDecoration = 'line-through';
                 itemText.style.color = '#999';
+                // Remove overdue/due-soon classes if task is completed
+                itemContainer.classList.remove('overdue', 'due-soon');
             } else {
                 checkbox.checked = false;
                 itemText.style.textDecoration = 'none';
                 itemText.style.color = '#333';
+                // Re-check due date status if task is unchecked
+                const dueDate = itemDueDates[key];
+                if (dueDate) {
+                    checkDueDateStatus(itemContainer, dueDate);
+                }
             }
             
             updateProgress();
@@ -2102,6 +2140,20 @@
                 });
         }
         
+        function getLastComment(key) {
+            const comments = itemComments[key] || [];
+            if (comments.length === 0) return null;
+            return comments[comments.length - 1];
+        }
+        
+        function formatCommentPreview(comment) {
+            if (!comment) return '';
+            const maxLength = 50;
+            const text = comment.text.replace(/\n/g, ' ');
+            const preview = text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+            return `${comment.author}: ${preview}`;
+        }
+        
         function renderComments(sectionIndex, itemIndex) {
             const key = `${sectionIndex}-${itemIndex}`;
             const commentsContainer = document.getElementById(`comments-list-${key}`);
@@ -2127,21 +2179,42 @@
                     </div>
                 `;
             }).join('');
+            
+            // Update last comment preview
+            updateLastCommentPreview(sectionIndex, itemIndex);
+        }
+        
+        function updateLastCommentPreview(sectionIndex, itemIndex) {
+            const key = `${sectionIndex}-${itemIndex}`;
+            const previewEl = document.getElementById(`comment-preview-${key}`);
+            
+            if (!previewEl) return;
+            
+            const lastComment = getLastComment(key);
+            if (lastComment) {
+                previewEl.textContent = formatCommentPreview(lastComment);
+                previewEl.style.display = 'inline-block';
+            } else {
+                previewEl.style.display = 'none';
+            }
         }
         
         function updateCommentIndicator(sectionIndex, itemIndex) {
             const key = `${sectionIndex}-${itemIndex}`;
-            const indicator = document.getElementById(`comment-indicator-${key}`);
+            const btn = document.getElementById(`comment-btn-${key}`);
             
-            if (!indicator) return;
+            if (!btn) return;
             
             const comments = itemComments[key] || [];
             if (comments.length > 0) {
-                indicator.style.display = 'inline-flex';
-                indicator.textContent = comments.length;
+                btn.classList.add('has-comments');
+                btn.innerHTML = `💬 ${comments.length}`;
             } else {
-                indicator.style.display = 'none';
+                btn.classList.remove('has-comments');
+                btn.innerHTML = '💬';
             }
+            
+            updateLastCommentPreview(sectionIndex, itemIndex);
         }
         
         function updateCommentsDisplay() {
@@ -2204,6 +2277,7 @@
                     const dueDate = itemDueDates[key] || '';
                     const priority = itemPriorities[key] || 'optional';
                     const execution = itemExecutions[key] || '';
+                    const lastComment = getLastComment(key);
                     
                     // Check if item should have special styling based on due date
                     let itemClass = 'checklist-item';
@@ -2225,12 +2299,12 @@
                                    ${isChecked ? 'checked' : ''}
                                    onchange="toggleItem(${sectionIndex}, ${itemIndex})">
                             <div class="item-text">${itemIndex + 1}. ${item}
-                                <span class="comment-indicator" 
-                                      id="comment-indicator-${key}" 
+                                <span class="last-comment-preview" 
+                                      id="comment-preview-${key}" 
                                       onclick="toggleComments(${sectionIndex}, ${itemIndex})"
-                                      title="Комментарии"
-                                      style="${comments.length > 0 ? '' : 'display: none;'}">
-                                    ${comments.length}
+                                      title="Последний комментарий"
+                                      style="${lastComment ? '' : 'display: none;'}">
+                                    ${lastComment ? formatCommentPreview(lastComment) : ''}
                                 </span>
                             </div>
                             <select class="execution-select" 
@@ -2258,7 +2332,12 @@
                                 ${priorityLabels[priority]}
                             </div>
                             <div class="item-actions">
-                                <button class="icon-btn" onclick="toggleComments(${sectionIndex}, ${itemIndex})" title="Комментарии">💬</button>
+                                <button class="comment-btn ${comments.length > 0 ? 'has-comments' : ''}" 
+                                        id="comment-btn-${key}"
+                                        onclick="toggleComments(${sectionIndex}, ${itemIndex})" 
+                                        title="Комментарии">
+                                    💬${comments.length > 0 ? ' ' + comments.length : ''}
+                                </button>
                                 ${isEditMode ? `
                                     <button class="icon-btn" onclick="editItem(${sectionIndex}, ${itemIndex})" title="Редактировать">✏️</button>
                                     <button class="icon-btn" onclick="deleteItem(${sectionIndex}, ${itemIndex})" title="Удалить">🗑️</button>
