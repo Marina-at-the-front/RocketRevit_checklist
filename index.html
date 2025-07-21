@@ -1178,10 +1178,16 @@
                 const config = JSON.parse(savedConfig);
                 initializeFirebase(config);
             } else {
-                // Show setup modal
-                document.getElementById('setupModal').style.display = 'flex';
-                // Clean up old local storage from previous version
-                localStorage.removeItem('rocketRevitChecklist');
+                // Check if user previously chose local storage
+                const previouslyLocal = localStorage.getItem('rocketRevitUseLocal');
+                if (previouslyLocal === 'true') {
+                    useLocalStorage();
+                } else {
+                    // Show setup modal
+                    document.getElementById('setupModal').style.display = 'flex';
+                    // Clean up old local storage from previous version
+                    localStorage.removeItem('rocketRevitChecklist');
+                }
             }
         }
         
@@ -1473,46 +1479,60 @@
         // Use local storage instead
         function useLocalStorage() {
             useLocal = true;
+            localStorage.setItem('rocketRevitUseLocal', 'true');
             document.getElementById('setupModal').style.display = 'none';
+            document.getElementById('resetBtn').style.display = 'inline-block';
             loadFromLocal();
             updateSyncStatus();
         }
         
         // Load from local storage
         function loadFromLocal() {
-            const savedStructure = localStorage.getItem('rocketRevitStructure');
-            if (savedStructure) {
-                checklistData = JSON.parse(savedStructure);
-            }
-            
-            const saved = localStorage.getItem('rocketRevitChecklist');
-            if (saved) {
-                checkedItems = JSON.parse(saved);
-            }
-            
-            const savedComments = localStorage.getItem('rocketRevitComments');
-            if (savedComments) {
-                itemComments = JSON.parse(savedComments);
-            }
-            
-            const savedAssignees = localStorage.getItem('rocketRevitAssignees');
-            if (savedAssignees) {
-                itemAssignees = JSON.parse(savedAssignees);
-            }
-            
-            const savedDueDates = localStorage.getItem('rocketRevitDueDates');
-            if (savedDueDates) {
-                itemDueDates = JSON.parse(savedDueDates);
-            }
-            
-            const savedPriorities = localStorage.getItem('rocketRevitPriorities');
-            if (savedPriorities) {
-                itemPriorities = JSON.parse(savedPriorities);
-            }
-            
-            const savedExecutions = localStorage.getItem('rocketRevitExecutions');
-            if (savedExecutions) {
-                itemExecutions = JSON.parse(savedExecutions);
+            try {
+                const savedStructure = localStorage.getItem('rocketRevitStructure');
+                if (savedStructure) {
+                    checklistData = JSON.parse(savedStructure);
+                }
+                
+                const saved = localStorage.getItem('rocketRevitChecklist');
+                if (saved) {
+                    checkedItems = JSON.parse(saved);
+                }
+                
+                const savedComments = localStorage.getItem('rocketRevitComments');
+                if (savedComments) {
+                    itemComments = JSON.parse(savedComments);
+                }
+                
+                const savedAssignees = localStorage.getItem('rocketRevitAssignees');
+                if (savedAssignees) {
+                    itemAssignees = JSON.parse(savedAssignees);
+                }
+                
+                const savedDueDates = localStorage.getItem('rocketRevitDueDates');
+                if (savedDueDates) {
+                    itemDueDates = JSON.parse(savedDueDates);
+                }
+                
+                const savedPriorities = localStorage.getItem('rocketRevitPriorities');
+                if (savedPriorities) {
+                    itemPriorities = JSON.parse(savedPriorities);
+                }
+                
+                const savedExecutions = localStorage.getItem('rocketRevitExecutions');
+                if (savedExecutions) {
+                    itemExecutions = JSON.parse(savedExecutions);
+                }
+                
+                console.log('Data loaded from localStorage:', {
+                    comments: Object.keys(itemComments).length,
+                    assignees: Object.keys(itemAssignees).length,
+                    dueDates: Object.keys(itemDueDates).length,
+                    priorities: Object.keys(itemPriorities).length,
+                    executions: Object.keys(itemExecutions).length
+                });
+            } catch (e) {
+                console.error('Error loading from localStorage:', e);
             }
             
             renderSections();
@@ -1521,13 +1541,18 @@
         
         // Save to local storage
         function saveToLocal() {
-            localStorage.setItem('rocketRevitChecklist', JSON.stringify(checkedItems));
-            localStorage.setItem('rocketRevitStructure', JSON.stringify(checklistData));
-            localStorage.setItem('rocketRevitComments', JSON.stringify(itemComments));
-            localStorage.setItem('rocketRevitAssignees', JSON.stringify(itemAssignees));
-            localStorage.setItem('rocketRevitDueDates', JSON.stringify(itemDueDates));
-            localStorage.setItem('rocketRevitPriorities', JSON.stringify(itemPriorities));
-            localStorage.setItem('rocketRevitExecutions', JSON.stringify(itemExecutions));
+            try {
+                localStorage.setItem('rocketRevitChecklist', JSON.stringify(checkedItems));
+                localStorage.setItem('rocketRevitStructure', JSON.stringify(checklistData));
+                localStorage.setItem('rocketRevitComments', JSON.stringify(itemComments));
+                localStorage.setItem('rocketRevitAssignees', JSON.stringify(itemAssignees));
+                localStorage.setItem('rocketRevitDueDates', JSON.stringify(itemDueDates));
+                localStorage.setItem('rocketRevitPriorities', JSON.stringify(itemPriorities));
+                localStorage.setItem('rocketRevitExecutions', JSON.stringify(itemExecutions));
+                console.log('Data saved to localStorage');
+            } catch (e) {
+                console.error('Error saving to localStorage:', e);
+            }
         }
         
         // Show setup modal
@@ -1543,6 +1568,7 @@
                 itemDueDates = {};
                 itemPriorities = {};
                 itemExecutions = {};
+                itemComments = {};
                 
                 if (useLocal) {
                     localStorage.removeItem('rocketRevitChecklist');
@@ -1550,12 +1576,14 @@
                     localStorage.removeItem('rocketRevitDueDates');
                     localStorage.removeItem('rocketRevitPriorities');
                     localStorage.removeItem('rocketRevitExecutions');
+                    localStorage.removeItem('rocketRevitComments');
                 } else if (database) {
                     database.ref('rocketrevit-checklist').set({});
                     database.ref('rocketrevit-assignees').set({});
                     database.ref('rocketrevit-duedates').set({});
                     database.ref('rocketrevit-priorities').set({});
                     database.ref('rocketrevit-executions').set({});
+                    database.ref('rocketrevit-comments').set({});
                 }
                 
                 renderSections();
@@ -1731,7 +1759,10 @@
         // Save executions to Firebase
         function saveExecutionsToFirebase() {
             if (!database || !isOnline) return;
-            database.ref('rocketrevit-executions').set(itemExecutions);
+            database.ref('rocketrevit-executions').set(itemExecutions)
+                .catch((error) => {
+                    console.error('Save executions error:', error);
+                });
         }
         
         // Change assignee
@@ -1827,19 +1858,28 @@
         // Save assignees to Firebase
         function saveAssigneesToFirebase() {
             if (!database || !isOnline) return;
-            database.ref('rocketrevit-assignees').set(itemAssignees);
+            database.ref('rocketrevit-assignees').set(itemAssignees)
+                .catch((error) => {
+                    console.error('Save assignees error:', error);
+                });
         }
         
         // Save due dates to Firebase
         function saveDueDatesToFirebase() {
             if (!database || !isOnline) return;
-            database.ref('rocketrevit-duedates').set(itemDueDates);
+            database.ref('rocketrevit-duedates').set(itemDueDates)
+                .catch((error) => {
+                    console.error('Save due dates error:', error);
+                });
         }
         
         // Save priorities to Firebase
         function savePrioritiesToFirebase() {
             if (!database || !isOnline) return;
-            database.ref('rocketrevit-priorities').set(itemPriorities);
+            database.ref('rocketrevit-priorities').set(itemPriorities)
+                .catch((error) => {
+                    console.error('Save priorities error:', error);
+                });
         }
         
         // Apply sort and filter
@@ -2394,10 +2434,26 @@
             updateDueDates();
             updatePriorities();
             updateExecutions();
+            
+            // Force update of due date status for all items
+            checklistData.forEach((section, sectionIndex) => {
+                section.items.forEach((item, itemIndex) => {
+                    const key = `${sectionIndex}-${itemIndex}`;
+                    const dueDate = itemDueDates[key];
+                    if (dueDate) {
+                        const itemEl = document.getElementById(`item-container-${key}`);
+                        if (itemEl) {
+                            checkDueDateStatus(itemEl, dueDate);
+                        }
+                    }
+                });
+            });
         }
         
         // Initialize
-        checkFirebaseConfig();
+        window.addEventListener('DOMContentLoaded', () => {
+            checkFirebaseConfig();
+        });
     </script>
 </body>
 </html>
