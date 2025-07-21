@@ -78,7 +78,6 @@
             align-items: center;
             gap: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 100;
         }
         
         .sync-status.offline {
@@ -136,35 +135,41 @@
             justify-content: center;
         }
         
-        .filter-controls {
+        .filters {
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
             flex-wrap: wrap;
             align-items: center;
-            padding: 15px;
             background: #f8f9fa;
+            padding: 15px;
             border-radius: 8px;
         }
         
         .filter-group {
             display: flex;
+            gap: 5px;
             align-items: center;
-            gap: 8px;
         }
         
         .filter-group label {
-            font-weight: 500;
-            color: #555;
+            font-weight: bold;
+            color: #333;
+            margin-right: 5px;
         }
         
-        .filter-group select {
+        select {
             padding: 8px 12px;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 14px;
             background: white;
             cursor: pointer;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #2196F3;
         }
         
         button {
@@ -237,11 +242,34 @@
             font-size: 1.3em;
             font-weight: bold;
             color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
         
         .section-progress {
             font-size: 0.9em;
             color: #666;
+        }
+        
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background 0.2s;
+            font-size: 18px;
+        }
+        
+        .icon-btn:hover {
+            background: rgba(0,0,0,0.1);
         }
         
         .section-content {
@@ -253,267 +281,234 @@
             display: block;
         }
         
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .items-table th {
-            background: #f8f9fa;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            border-bottom: 2px solid #dee2e6;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .items-table td {
-            padding: 12px;
+        .checklist-item {
+            display: grid;
+            grid-template-columns: 30px 1fr 180px 140px 120px auto;
+            gap: 15px;
+            align-items: center;
+            padding: 15px 0;
             border-bottom: 1px solid #f0f0f0;
-            vertical-align: middle;
-        }
-        
-        .items-table tr:hover {
-            background: #f9f9f9;
-        }
-        
-        .checkbox-cell {
-            width: 40px;
-        }
-        
-        .do-cell {
-            width: 80px;
-            text-align: center;
-        }
-        
-        .task-cell {
-            min-width: 300px;
-        }
-        
-        .responsible-cell, .deadline-cell, .priority-cell {
-            width: 150px;
-        }
-        
-        .comment-cell {
-            min-width: 300px;
-            padding: 0 !important;
+            transition: background 0.2s ease;
             position: relative;
         }
         
-        .actions-cell {
-            width: 100px;
-            text-align: center;
+        .checklist-item:last-child {
+            border-bottom: none;
         }
         
-        .do-checkbox, .task-checkbox {
+        .checklist-item:hover {
+            background: #f9f9f9;
+        }
+        
+        .checklist-item:hover .item-actions {
+            opacity: 1;
+        }
+        
+        .checklist-item input[type="checkbox"] {
             width: 20px;
             height: 20px;
             cursor: pointer;
         }
         
-        .task-text {
-            display: inline-block;
-            margin-left: 10px;
+        .checklist-item .item-text {
+            cursor: pointer;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        .task-checkbox:checked ~ .task-text {
+        .checklist-item input[type="checkbox"]:checked + .item-text {
             text-decoration: line-through;
             color: #999;
         }
         
-        .responsible-select, .deadline-input, .priority-select {
-            width: 100%;
-            padding: 8px;
+        .assignee-select, .due-date-input {
+            padding: 6px 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .comment-chat {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-            min-height: 40px;
-        }
-        
-        .comment-chat:hover {
-            background: #f8f9fa;
-        }
-        
-        .comment-preview {
-            flex: 1;
             font-size: 13px;
-            color: #666;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            background: white;
         }
         
-        .comment-preview.has-comments {
-            color: #2196F3;
+        .assignee-select:focus, .due-date-input:focus {
+            outline: none;
+            border-color: #2196F3;
         }
         
-        .comment-badge {
-            background: #ff9800;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .priority-tag {
+            padding: 4px 8px;
+            border-radius: 12px;
             font-size: 11px;
             font-weight: bold;
-            margin-left: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 90px;
         }
         
-        .comment-expanded {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            width: 350px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            z-index: 100;
-            display: none;
-            max-height: 400px;
-            overflow: hidden;
-            flex-direction: column;
+        .priority-must-have {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #f8bbd9;
         }
         
-        .comment-expanded.active {
+        .priority-desirable {
+            background: #fff3e0;
+            color: #ef6c00;
+            border: 1px solid #ffcc02;
+        }
+        
+        .priority-optional {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .priority-tag:hover {
+            transform: scale(1.05);
+        }
+        
+        .item-actions {
             display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .comment-indicator {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #FFF3CD;
+            color: #856404;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .comment-indicator:hover {
+            background: #FFE69C;
+            transform: scale(1.1);
+        }
+        
+        .comment-section {
+            grid-column: 1 / -1;
+            margin-top: 10px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 3px solid #2196F3;
+        }
+        
+        .comment {
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         .comment-header {
-            padding: 12px 15px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-        
-        .comment-title {
-            font-weight: 600;
-            color: #333;
-            font-size: 14px;
-        }
-        
-        .close-chat {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: #999;
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.2s;
-        }
-        
-        .close-chat:hover {
-            background: #e9ecef;
-            color: #333;
-        }
-        
-        .comment-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            max-height: 250px;
-        }
-        
-        .comment-message {
-            margin-bottom: 12px;
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
-        }
-        
-        .comment-message-header {
-            display: flex;
-            justify-content: space-between;
             margin-bottom: 5px;
-            font-size: 12px;
         }
         
         .comment-author {
-            font-weight: 600;
+            font-weight: bold;
             color: #2196F3;
+            font-size: 14px;
         }
         
         .comment-date {
+            font-size: 12px;
             color: #999;
         }
         
         .comment-text {
             color: #333;
-            font-size: 13px;
+            font-size: 14px;
             line-height: 1.4;
-            word-wrap: break-word;
         }
         
-        .comment-form {
-            padding: 12px;
-            background: #f8f9fa;
-            border-top: 1px solid #e9ecef;
-        }
-        
-        .comment-input-group {
+        .comment-input-container {
             display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
+            gap: 10px;
+            margin-top: 10px;
         }
         
-        .comment-author-input {
-            width: 120px;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 13px;
-        }
-        
-        .comment-text-input {
+        .comment-input {
             flex: 1;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 13px;
-            resize: none;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 40px;
         }
         
-        .comment-send-btn {
-            padding: 8px 16px;
-            background: #2196F3;
-            color: white;
-            border: none;
+        .comment-input:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+        
+        .author-input {
+            width: 150px;
+            padding: 8px;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 13px;
+            font-size: 14px;
+        }
+        
+        .delete-comment {
+            color: #dc3545;
             cursor: pointer;
-            transition: background 0.2s;
+            font-size: 12px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
         }
         
-        .comment-send-btn:hover {
-            background: #1976D2;
+        .delete-comment:hover {
+            opacity: 1;
         }
         
-        .no-comments {
-            text-align: center;
-            color: #999;
-            padding: 30px;
-            font-size: 13px;
+        .edit-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #2196F3;
+            border-radius: 3px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        
+        .add-item-container {
+            display: grid;
+            grid-template-columns: 30px 1fr 180px 140px 120px auto;
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+            align-items: center;
+        }
+        
+        .add-item-input {
+            grid-column: 2;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .add-item-input:focus {
+            outline: none;
+            border-color: #2196F3;
         }
         
         .stats {
@@ -543,20 +538,16 @@
         }
         
         .setup-modal {
-            display: none;
+            display: flex;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
-            z-index: 2000;
+            z-index: 1000;
             justify-content: center;
             align-items: center;
-        }
-        
-        .setup-modal.show {
-            display: flex;
         }
         
         .setup-content {
@@ -639,7 +630,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             font-weight: bold;
             transition: all 0.3s ease;
-            z-index: 100;
         }
         
         .edit-mode-toggle.active {
@@ -650,53 +640,14 @@
             transform: scale(1.05);
         }
         
-        .icon-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 3px;
-            transition: background 0.2s;
-            font-size: 18px;
+        .overdue {
+            background: #ffebee !important;
+            border-left: 4px solid #f44336;
         }
         
-        .icon-btn:hover {
-            background: rgba(0,0,0,0.1);
-        }
-        
-        .edit-input {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #2196F3;
-            border-radius: 3px;
-            font-size: 14px;
-            margin-right: 10px;
-        }
-        
-        .add-item-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #f0f0f0;
-        }
-        
-        .add-item-input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        
-        .add-item-input:focus,
-        .comment-text-input:focus,
-        .comment-author-input:focus,
-        .responsible-select:focus,
-        .deadline-input:focus,
-        .priority-select:focus {
-            outline: none;
-            border-color: #2196F3;
+        .due-soon {
+            background: #fff3e0 !important;
+            border-left: 4px solid #ff9800;
         }
         
         @media print {
@@ -711,12 +662,12 @@
             }
             
             .controls,
+            .filters,
             .sync-status,
-            .edit-mode-toggle,
-            .icon-btn,
+            .item-actions,
             .add-item-container,
-            .filter-controls,
-            .comment-expanded {
+            .edit-mode-toggle,
+            .icon-btn {
                 display: none !important;
             }
             
@@ -724,8 +675,56 @@
                 display: block !important;
             }
             
-            .items-table {
+            .checklist-item {
                 page-break-inside: avoid;
+                grid-template-columns: 30px 1fr 120px 100px 80px;
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .controls {
+                justify-content: center;
+            }
+            
+            button {
+                flex: 1;
+                min-width: 150px;
+            }
+            
+            .sync-status {
+                top: 10px;
+                right: 10px;
+                font-size: 12px;
+            }
+            
+            .logo {
+                width: 200px;
+                height: 60px;
+            }
+            
+            .checklist-item {
+                grid-template-columns: 30px 1fr;
+                gap: 10px;
+            }
+            
+            .checklist-item > *:nth-child(n+3) {
+                grid-column: 1 / -1;
+                margin-left: 40px;
+                margin-bottom: 5px;
+            }
+            
+            .filters {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -736,7 +735,7 @@
         <span id="syncText">Подключение...</span>
     </div>
     
-    <div class="setup-modal" id="setupModal">
+    <div class="setup-modal" id="setupModal" style="display: none;">
         <div class="setup-content">
             <h2>Настройка синхронизации</h2>
             
@@ -807,47 +806,10 @@
                 <div class="stat-number" id="remainingTasks">0</div>
                 <div class="stat-label">Осталось</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="doingTasks">0</div>
-                <div class="stat-label">Делаем</div>
-            </div>
         </div>
         
         <div class="progress-bar">
             <div class="progress-fill" id="progressBar">0%</div>
-        </div>
-        
-        <div class="filter-controls">
-            <div class="filter-group">
-                <label>Ответственный:</label>
-                <select id="filterResponsible" onchange="applyFilters()">
-                    <option value="">Все</option>
-                    <option value="Савков Никита">Савков Никита</option>
-                    <option value="Марина Манькова">Марина Манькова</option>
-                    <option value="Евгений Федулов">Евгений Федулов</option>
-                    <option value="Игорь Овчинников">Игорь Овчинников</option>
-                </select>
-            </div>
-            
-            <div class="filter-group">
-                <label>Приоритет:</label>
-                <select id="filterPriority" onchange="applyFilters()">
-                    <option value="">Все</option>
-                    <option value="must">Must have</option>
-                    <option value="high">Крайне желательно</option>
-                    <option value="optional">Опционально</option>
-                </select>
-            </div>
-            
-            <div class="filter-group">
-                <label>Сортировка:</label>
-                <select id="sortBy" onchange="applyFilters()">
-                    <option value="">По умолчанию</option>
-                    <option value="deadline">По дедлайну</option>
-                    <option value="responsible">По ответственному</option>
-                    <option value="priority">По приоритету</option>
-                </select>
-            </div>
         </div>
         
         <div class="controls">
@@ -858,6 +820,50 @@
             <button class="btn-danger" onclick="resetProgress()" style="display: none;" id="resetBtn">Сбросить прогресс</button>
         </div>
         
+        <div class="filters">
+            <div class="filter-group">
+                <label>Сортировка:</label>
+                <select id="sortBy" onchange="applySortAndFilter()">
+                    <option value="default">По умолчанию</option>
+                    <option value="assignee">По ответственному</option>
+                    <option value="dueDate">По сроку выполнения</option>
+                    <option value="priority">По приоритету</option>
+                    <option value="completion">По статусу выполнения</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Ответственный:</label>
+                <select id="filterAssignee" onchange="applySortAndFilter()">
+                    <option value="">Все</option>
+                    <option value="Савков Никита">Савков Никита</option>
+                    <option value="Марина Манькова">Марина Манькова</option>
+                    <option value="Евгений Федулов">Евгений Федулов</option>
+                    <option value="Игорь Овчинников">Игорь Овчинников</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Приоритет:</label>
+                <select id="filterPriority" onchange="applySortAndFilter()">
+                    <option value="">Все</option>
+                    <option value="must-have">Must have</option>
+                    <option value="desirable">Крайне желательно</option>
+                    <option value="optional">Опционально</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Статус:</label>
+                <select id="filterStatus" onchange="applySortAndFilter()">
+                    <option value="">Все</option>
+                    <option value="completed">Выполненные</option>
+                    <option value="pending">Невыполненные</option>
+                    <option value="overdue">Просроченные</option>
+                </select>
+            </div>
+        </div>
+        
         <div id="sections"></div>
     </div>
     
@@ -866,252 +872,242 @@
     </button>
     
     <script>
-        // Wait for DOM to load
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeApp);
-        } else {
-            initializeApp();
-        }
+        let checklistData = [
+            {
+                title: "🎯 1. Стратегия и позиционирование",
+                items: [
+                    'Определить ключевое УТП: "CI/CD в проектировании. Непрерывная интеграция изменений. Централизованный Family/Script Manager и другие инструменты, которым мы хотели купить, но не смогли, т.к. их до нас не было."',
+                    'Сформулировать миссию: революция в работе архитекторов и инженеров',
+                    'Создать слоган: "Работа проектировщика - творить и созидать, оформление оставьте нам"',
+                    'Определить целевые сегменты: архитекторы, проектировщики, BIM-менеджеры, IT-администраторы',
+                    'Разработать матрицу конкурентных преимуществ',
+                    'Создать документ позиционирования для партнеров',
+                    'Определить ценностное предложение для каждого сегмента',
+                    'Разработать elevator pitch (30 секунд)',
+                    'Создать расширенный pitch (2 минуты)',
+                    'Подготовить SWOT-анализ продукта',
+                    'Провести анализ конкурентов (минимум 10)',
+                    'Создать персоны покупателей (3-5 профилей)',
+                    'Разработать Customer Journey Map',
+                    'Определить барьеры входа и способы их преодоления'
+                ]
+            },
+            {
+                title: "🎨 2. Брендинг и визуальная идентичность",
+                items: [
+                    'Финализировать логотип (уже есть ✓)',
+                    'Создать брендбук с правилами использования логотипа',
+                    'Определить корпоративные цвета (синий #2196F3, красный #FF5252)',
+                    'Выбрать корпоративные шрифты',
+                    'Разработать шаблон презентации PowerPoint',
+                    'Создать фирменный бланк и визитки',
+                    'Дизайн email-подписи для команды',
+                    'Разработать варианты логотипа (монохром, инверсия)',
+                    'Создать анимированную версию логотипа',
+                    'Подготовить watermark для документов',
+                    'Создать библиотеку UI-элементов'
+                ]
+            },
+            {
+                title: "🌐 3. Веб-присутствие и SEO",
+                items: [
+                    'Проверить работоспособность сайта rocketrevit.ru',
+                    'Добавить фавикон',
+                    'Установить Яндекс.Метрику',
+                    'Настроить цели и события в аналитике',
+                    'Создать sitemap.xml',
+                    'Оптимизировать robots.txt',
+                    'Провести технический SEO-аудит',
+                    'Написать meta-теги для всех страниц',
+                    'Создать страницу "Функционал" с описанием функций',
+                    'Создать страницу "Релизы"',
+                    'Добавить раздел FAQ',
+                    'Создать блог для контент-маркетинга',
+                    'Добавить форму обратной связи',
+                    'Внедрить чат поддержки',
+                    'Создать страницу "Контакты"',
+                    'Настроить SSL-сертификат',
+                    'Оптимизировать скорость загрузки (PageSpeed)',
+                    'Внедрить микроразметку Schema.org',
+                    'Создать страницу "Изменения шаблона" с changelog'
+                ]
+            },
+            {
+                title: "📹 4. Видеоконтент и промо-ролик",
+                items: [
+                    'Написать сценарий промо-ролика (40 секунд)',
+                    'Записать закадровый голос',
+                    'Снять демонстрацию работы плагина',
+                    'Создать анимацию логотипа',
+                    'Смонтировать промо-ролик',
+                    'Создать версии: 15 сек, 30 сек, 90 сек',
+                    'Записать серию обучающих видео (5-7 роликов)',
+                    'Подготовить субтитры на русском и английском'
+                ]
+            },
+            {
+                title: "📱 5. Социальные сети и сообщества",
+                items: [
+                    'Оформить Telegram-канал @rocketrevit',
+                    'Создать welcome-сообщение для новых участников',
+                    'Разработать контент-план на месяц для Telegram',
+                    'Создать страницу ВКонтакте',
+                    'Создать профиль в LinkedIn',
+                    'Зарегистрировать YouTube-канал',
+                    'Настроить автопостинг между соцсетями',
+                    'Подготовить 20 постов для старта',
+                    'Найти и вступить в 10 профильных сообществ',
+                    'Создать чат-бота для Telegram',
+                    'Запустить конкурс в соцсетях',
+                    'Создать хештеги #RocketRevit #РокетРевит',
+                    'Найти амбассадоров среди пользователей',
+                    'Создать стикерпак для Telegram',
+                    'Запустить серию опросов',
+                    'Создать профиль на GitHub',
+                    'Зарегистрироваться на форумах Autodesk'
+                ]
+            },
+            {
+                title: "🎯 6. Яндекс.Директ и контекстная реклама",
+                items: [
+                    'Создать аккаунт в Яндекс.Директ',
+                    'Провести анализ ключевых слов',
+                    'Создать структуру рекламных кампаний',
+                    'Написать 10 объявлений для поиска',
+                    'Создать РСЯ-кампанию с баннерами',
+                    'Настроить ретаргетинг',
+                    'Определить бюджет',
+                    'Подготовить баннеры всех размеров',
+                    'Настроить минус-слова',
+                    'Создать кампанию на поиске Яндекса',
+                    'Настроить геотаргетинг',
+                    'Создать динамические объявления',
+                    'Создать видеообъявления',
+                    'Настроить корректировки ставок'
+                ]
+            },
+            {
+                title: "🏢 7. Выставки и мероприятия",
+                items: [
+                    'Составить список профильных выставок 2025',
+                    'Забронировать стенд на "Autodesk University Russia"',
+                    'Подготовить дизайн выставочного стенда',
+                    'Заказать ролл-апы и баннеры',
+                    'Напечатать брошюры (200 шт)',
+                    'Подготовить промо-материалы',
+                    'Создать презентацию для выставки',
+                    'Разработать механику сбора контактов',
+                    'Подготовить специальное предложение для выставки',
+                    'Подготовить демо-стенд с компьютерами',
+                    'Разработать квест/игру для стенда',
+                    'Заказать фирменную одежду для команды',
+                    'Подготовить пресс-кит для журналистов',
+                    'Организовать розыгрыш призов',
+                    'Создать QR-коды для быстрой загрузки',
+                    'Подготовить сувениры (блокноты, стикеры)',
+                    'Арендовать оборудование для демонстрации',
+                    'Создать follow-up стратегию после выставки'
+                ]
+            },
+            {
+                title: "📧 8. Email-маркетинг и лидогенерация",
+                items: [
+                    'Выбрать платформу email-рассылок',
+                    'Создать lead-магнит (гайд по автоматизации в Revit)',
+                    'Настроить pop-up форму на сайте',
+                    'Создать welcome-серию из 5 писем',
+                    'Разработать шаблоны писем',
+                    'Настроить сегментацию базы',
+                    'Создать email-курс по работе с плагином',
+                    'Настроить триггерные рассылки',
+                    'Подготовить чек-лист "10 лайфхаков Revit"',
+                    'Создать VIP-рассылку для активных пользователей',
+                    'Создать email-опросы удовлетворенности',
+                    'Разработать программу лояльности',
+                    'Настроить birthday-рассылки'
+                ]
+            },
+            {
+                title: "📊 9. Контент-маркетинг и PR",
+                items: [
+                    'Написать 10 статей для блога',
+                    'Создать пресс-релиз о запуске',
+                    'Подготовить кейсы использования (3-5 шт)',
+                    'Создать white paper о технологии горячей перезагрузки',
+                    'Записать подкаст с разработчиками',
+                    'Организовать вебинар по запуску',
+                    'Создать инфографику о преимуществах',
+                    'Написать гостевые статьи на Хабр',
+                    'Подготовить сравнение с конкурентами',
+                    'Разработать чек-листы для разных задач',
+                    'Написать статьи для VC.ru'
+                ]
+            },
+            {
+                title: "✅ 10. Метрики, аналитика и оптимизация",
+                items: [
+                    'Определить KPI: загрузки, активные пользователи, конверсии',
+                    'Настроить дашборд в Google Data Studio',
+                    'Создать систему отслеживания ROI',
+                    'Провести первый анализ результатов',
+                    'Составить план оптимизации',
+                    'Настроить когортный анализ',
+                    'Внедрить NPS-опросы',
+                    'Создать heat maps для сайта',
+                    'Настроить отслеживание микроконверсий',
+                    'Провести юзабилити-тестирование',
+                    'Настроить мониторинг упоминаний',
+                    'Создать систему тегирования в GA',
+                    'Настроить воронки продаж',
+                    'Провести анализ источников трафика',
+                    'Создать custom reports',
+                    'Настроить алерты на аномалии',
+                    'Провести анализ поведения пользователей'
+                ]
+            },
+            {
+                title: "🎁 11. Дополнительные активности",
+                items: [
+                    'Создать партнерскую программу',
+                    'Найти инфлюенсеров в BIM-сообществе',
+                    'Организовать хакатон для разработчиков',
+                    'Создать программу beta-тестирования',
+                    'Разработать плагины-компаньоны',
+                    'Создать маркетплейс расширений',
+                    'Организовать user meetup',
+                    'Запустить программу сертификации',
+                    'Создать чат поддержки',
+                    'Разработать мобильное приложение-компаньон',
+                    'Организовать конференцию пользователей',
+                    'Создать sandbox для тестирования',
+                    'Запустить bug bounty программу',
+                    'Разработать Revit-шаблоны',
+                    'Создать обучающий курс на Udemy',
+                    'Организовать воркшопы'
+                ]
+            }
+        ];
         
-        function initializeApp() {
-            // Global variables
-            window.checklistData = [
-                {
-                    title: "🎯 1. Стратегия и позиционирование",
-                    items: [
-                        'Определить ключевое УТП: "CI/CD в проектировании. Непрерывная интеграция изменений. Централизованный Family/Script Manager и другие инструменты, которым мы хотели купить, но не смогли, т.к. их до нас не было."',
-                        'Сформулировать миссию: революция в работе архитекторов и инженеров',
-                        'Создать слоган: "Работа проектировщика - творить и созидать, оформление оставьте нам"',
-                        'Определить целевые сегменты: архитекторы, проектировщики, BIM-менеджеры, IT-администраторы',
-                        'Разработать матрицу конкурентных преимуществ',
-                        'Создать документ позиционирования для партнеров',
-                        'Определить ценностное предложение для каждого сегмента',
-                        'Разработать elevator pitch (30 секунд)',
-                        'Создать расширенный pitch (2 минуты)',
-                        'Подготовить SWOT-анализ продукта',
-                        'Провести анализ конкурентов (минимум 10)',
-                        'Создать персоны покупателей (3-5 профилей)',
-                        'Разработать Customer Journey Map',
-                        'Определить барьеры входа и способы их преодоления'
-                    ]
-                },
-                {
-                    title: "🎨 2. Брендинг и визуальная идентичность",
-                    items: [
-                        'Финализировать логотип (уже есть ✓)',
-                        'Создать брендбук с правилами использования логотипа',
-                        'Определить корпоративные цвета (синий #2196F3, красный #FF5252)',
-                        'Выбрать корпоративные шрифты',
-                        'Разработать шаблон презентации PowerPoint',
-                        'Создать фирменный бланк и визитки',
-                        'Дизайн email-подписи для команды',
-                        'Разработать варианты логотипа (монохром, инверсия)',
-                        'Создать анимированную версию логотипа',
-                        'Подготовить watermark для документов',
-                        'Создать библиотеку UI-элементов'
-                    ]
-                },
-                {
-                    title: "🌐 3. Веб-присутствие и SEO",
-                    items: [
-                        'Проверить работоспособность сайта rocketrevit.ru',
-                        'Добавить фавикон',
-                        'Установить Яндекс.Метрику',
-                        'Настроить цели и события в аналитике',
-                        'Создать sitemap.xml',
-                        'Оптимизировать robots.txt',
-                        'Провести технический SEO-аудит',
-                        'Написать meta-теги для всех страниц',
-                        'Создать страницу "Функционал" с описанием функций',
-                        'Создать страницу "Релизы"',
-                        'Добавить раздел FAQ',
-                        'Создать блог для контент-маркетинга',
-                        'Добавить форму обратной связи',
-                        'Внедрить чат поддержки',
-                        'Создать страницу "Контакты"',
-                        'Настроить SSL-сертификат',
-                        'Оптимизировать скорость загрузки (PageSpeed)',
-                        'Внедрить микроразметку Schema.org',
-                        'Создать страницу "Изменения шаблона" с changelog'
-                    ]
-                },
-                {
-                    title: "📹 4. Видеоконтент и промо-ролик",
-                    items: [
-                        'Написать сценарий промо-ролика (40 секунд)',
-                        'Записать закадровый голос',
-                        'Снять демонстрацию работы плагина',
-                        'Создать анимацию логотипа',
-                        'Смонтировать промо-ролик',
-                        'Создать версии: 15 сек, 30 сек, 90 сек',
-                        'Записать серию обучающих видео (5-7 роликов)',
-                        'Подготовить субтитры на русском и английском'
-                    ]
-                },
-                {
-                    title: "📱 5. Социальные сети и сообщества",
-                    items: [
-                        'Оформить Telegram-канал @rocketrevit',
-                        'Создать welcome-сообщение для новых участников',
-                        'Разработать контент-план на месяц для Telegram',
-                        'Создать страницу ВКонтакте',
-                        'Создать профиль в LinkedIn',
-                        'Зарегистрировать YouTube-канал',
-                        'Настроить автопостинг между соцсетями',
-                        'Подготовить 20 постов для старта',
-                        'Найти и вступить в 10 профильных сообществ',
-                        'Создать чат-бота для Telegram',
-                        'Запустить конкурс в соцсетях',
-                        'Создать хештеги #RocketRevit #РокетРевит',
-                        'Найти амбассадоров среди пользователей',
-                        'Создать стикерпак для Telegram',
-                        'Запустить серию опросов',
-                        'Создать профиль на GitHub',
-                        'Зарегистрироваться на форумах Autodesk'
-                    ]
-                },
-                {
-                    title: "🎯 6. Яндекс.Директ и контекстная реклама",
-                    items: [
-                        'Создать аккаунт в Яндекс.Директ',
-                        'Провести анализ ключевых слов',
-                        'Создать структуру рекламных кампаний',
-                        'Написать 10 объявлений для поиска',
-                        'Создать РСЯ-кампанию с баннерами',
-                        'Настроить ретаргетинг',
-                        'Определить бюджет',
-                        'Подготовить баннеры всех размеров',
-                        'Настроить минус-слова',
-                        'Создать кампанию на поиске Яндекса',
-                        'Настроить геотаргетинг',
-                        'Создать динамические объявления',
-                        'Создать видеообъявления',
-                        'Настроить корректировки ставок'
-                    ]
-                },
-                {
-                    title: "🏢 7. Выставки и мероприятия",
-                    items: [
-                        'Составить список профильных выставок 2025',
-                        'Забронировать стенд на "Autodesk University Russia"',
-                        'Подготовить дизайн выставочного стенда',
-                        'Заказать ролл-апы и баннеры',
-                        'Напечатать брошюры (200 шт)',
-                        'Подготовить промо-материалы',
-                        'Создать презентацию для выставки',
-                        'Разработать механику сбора контактов',
-                        'Подготовить специальное предложение для выставки',
-                        'Подготовить демо-стенд с компьютерами',
-                        'Разработать квест/игру для стенда',
-                        'Заказать фирменную одежду для команды',
-                        'Подготовить пресс-кит для журналистов',
-                        'Организовать розыгрыш призов',
-                        'Создать QR-коды для быстрой загрузки',
-                        'Подготовить сувениры (блокноты, стикеры)',
-                        'Арендовать оборудование для демонстрации',
-                        'Создать follow-up стратегию после выставки'
-                    ]
-                },
-                {
-                    title: "📧 8. Email-маркетинг и лидогенерация",
-                    items: [
-                        'Выбрать платформу email-рассылок',
-                        'Создать lead-магнит (гайд по автоматизации в Revit)',
-                        'Настроить pop-up форму на сайте',
-                        'Создать welcome-серию из 5 писем',
-                        'Разработать шаблоны писем',
-                        'Настроить сегментацию базы',
-                        'Создать email-курс по работе с плагином',
-                        'Настроить триггерные рассылки',
-                        'Подготовить чек-лист "10 лайфхаков Revit"',
-                        'Создать VIP-рассылку для активных пользователей',
-                        'Создать email-опросы удовлетворенности',
-                        'Разработать программу лояльности',
-                        'Настроить birthday-рассылки'
-                    ]
-                },
-                {
-                    title: "📊 9. Контент-маркетинг и PR",
-                    items: [
-                        'Написать 10 статей для блога',
-                        'Создать пресс-релиз о запуске',
-                        'Подготовить кейсы использования (3-5 шт)',
-                        'Создать white paper о технологии горячей перезагрузки',
-                        'Записать подкаст с разработчиками',
-                        'Организовать вебинар по запуску',
-                        'Создать инфографику о преимуществах',
-                        'Написать гостевые статьи на Хабр',
-                        'Подготовить сравнение с конкурентами',
-                        'Разработать чек-листы для разных задач',
-                        'Написать статьи для VC.ru'
-                    ]
-                },
-                {
-                    title: "✅ 10. Метрики, аналитика и оптимизация",
-                    items: [
-                        'Определить KPI: загрузки, активные пользователи, конверсии',
-                        'Настроить дашборд в Google Data Studio',
-                        'Создать систему отслеживания ROI',
-                        'Провести первый анализ результатов',
-                        'Составить план оптимизации',
-                        'Настроить когортный анализ',
-                        'Внедрить NPS-опросы',
-                        'Создать heat maps для сайта',
-                        'Настроить отслеживание микроконверсий',
-                        'Провести юзабилити-тестирование',
-                        'Настроить мониторинг упоминаний',
-                        'Создать систему тегирования в GA',
-                        'Настроить воронки продаж',
-                        'Провести анализ источников трафика',
-                        'Создать custom reports',
-                        'Настроить алерты на аномалии',
-                        'Провести анализ поведения пользователей'
-                    ]
-                },
-                {
-                    title: "🎁 11. Дополнительные активности",
-                    items: [
-                        'Создать партнерскую программу',
-                        'Найти инфлюенсеров в BIM-сообществе',
-                        'Организовать хакатон для разработчиков',
-                        'Создать программу beta-тестирования',
-                        'Разработать плагины-компаньоны',
-                        'Создать маркетплейс расширений',
-                        'Организовать user meetup',
-                        'Запустить программу сертификации',
-                        'Создать чат поддержки',
-                        'Разработать мобильное приложение-компаньон',
-                        'Организовать конференцию пользователей',
-                        'Создать sandbox для тестирования',
-                        'Запустить bug bounty программу',
-                        'Разработать Revit-шаблоны',
-                        'Создать обучающий курс на Udemy',
-                        'Организовать воркшопы'
-                    ]
-                }
-            ];
-            
-            window.responsiblePeople = [
-                'Савков Никита',
-                'Марина Манькова',
-                'Евгений Федулов',
-                'Игорь Овчинников'
-            ];
-            
-            window.checkedItems = {};
-            window.itemComments = {};
-            window.itemData = {};
-            window.database = null;
-            window.isOnline = false;
-            window.useLocal = false;
-            window.isEditMode = false;
-            window.currentUserName = localStorage.getItem('rocketRevitUserName') || '';
-            
-            // Check for saved Firebase config
-            checkFirebaseConfig();
-        }
+        let checkedItems = {};
+        let itemComments = {};
+        let itemAssignees = {};
+        let itemDueDates = {};
+        let itemPriorities = {};
+        let database = null;
+        let isOnline = false;
+        let useLocal = false;
+        let isEditMode = false;
+        let currentUserName = localStorage.getItem('rocketRevitUserName') || '';
         
-        // All other functions below...
+        const assignees = ['', 'Савков Никита', 'Марина Манькова', 'Евгений Федулов', 'Игорь Овчинников'];
+        const priorities = ['must-have', 'desirable', 'optional'];
+        const priorityLabels = {
+            'must-have': 'Must have',
+            'desirable': 'Крайне желательно',
+            'optional': 'Опционально'
+        };
+        
+        // Check for saved Firebase config
         function checkFirebaseConfig() {
             const savedConfig = localStorage.getItem('firebaseConfig');
             if (savedConfig) {
@@ -1119,26 +1115,31 @@
                 initializeFirebase(config);
             } else {
                 // Show setup modal
-                const modal = document.getElementById('setupModal');
-                if (modal) {
-                    modal.classList.add('show');
-                }
+                document.getElementById('setupModal').style.display = 'flex';
+                // Clean up old local storage from previous version
+                localStorage.removeItem('rocketRevitChecklist');
             }
         }
         
+        // Initialize Firebase
         function initializeFirebase(config) {
             try {
                 firebase.initializeApp(config);
-                window.database = firebase.database();
+                database = firebase.database();
                 
+                // Listen for connection state
                 firebase.database().ref('.info/connected').on('value', (snapshot) => {
-                    window.isOnline = snapshot.val() === true;
+                    isOnline = snapshot.val() === true;
                     updateSyncStatus();
                 });
                 
+                // Load data from Firebase
                 loadFromFirebase();
                 
-                document.getElementById('setupModal').classList.remove('show');
+                // Hide setup modal
+                document.getElementById('setupModal').style.display = 'none';
+                
+                // Show reset button for admins
                 document.getElementById('resetBtn').style.display = 'inline-block';
                 
             } catch (error) {
@@ -1147,182 +1148,209 @@
             }
         }
         
+        // Load data from Firebase
         function loadFromFirebase() {
-            if (!window.database) return;
+            if (!database) return;
             
-            const structureRef = window.database.ref('rocketrevit-structure');
+            // Load checklist structure
+            const structureRef = database.ref('rocketrevit-structure');
             structureRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    window.checklistData = data;
+                    checklistData = data;
                     renderSections();
                     updateProgress();
                 }
             });
             
-            const checklistRef = window.database.ref('rocketrevit-checklist');
+            // Load checked items
+            const checklistRef = database.ref('rocketrevit-checklist');
             checklistRef.on('value', (snapshot) => {
                 const data = snapshot.val();
+                const needsFullRender = !document.getElementById('sections').innerHTML;
+                
                 if (data) {
-                    window.checkedItems = data;
+                    checkedItems = data;
                 } else {
-                    window.checkedItems = {};
+                    checkedItems = {};
                 }
-                updateCheckboxes();
+                
+                // Only render sections if they don't exist yet
+                if (needsFullRender) {
+                    renderSections();
+                } else {
+                    // Just update checkboxes without re-rendering
+                    updateCheckboxes();
+                }
+                
                 updateProgress();
                 updateSyncStatus();
             });
             
-            const commentsRef = window.database.ref('rocketrevit-comments');
+            // Load comments
+            const commentsRef = database.ref('rocketrevit-comments');
             commentsRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    window.itemComments = data;
+                    itemComments = data;
                 } else {
-                    window.itemComments = {};
+                    itemComments = {};
                 }
                 updateCommentsDisplay();
             });
             
-            const itemDataRef = window.database.ref('rocketrevit-itemdata');
-            itemDataRef.on('value', (snapshot) => {
+            // Load assignees
+            const assigneesRef = database.ref('rocketrevit-assignees');
+            assigneesRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    window.itemData = data;
+                    itemAssignees = data;
                 } else {
-                    window.itemData = {};
+                    itemAssignees = {};
                 }
-                updateItemDataDisplay();
-                updateProgress();
+                updateAssignees();
+            });
+            
+            // Load due dates
+            const dueDatesRef = database.ref('rocketrevit-duedates');
+            dueDatesRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    itemDueDates = data;
+                } else {
+                    itemDueDates = {};
+                }
+                updateDueDates();
+            });
+            
+            // Load priorities
+            const prioritiesRef = database.ref('rocketrevit-priorities');
+            prioritiesRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    itemPriorities = data;
+                } else {
+                    itemPriorities = {};
+                }
+                updatePriorities();
             });
         }
         
-        // Define all global functions
-        window.useLocalStorage = function() {
-            window.useLocal = true;
-            document.getElementById('setupModal').classList.remove('show');
-            loadFromLocal();
-            updateSyncStatus();
-        };
-        
-        window.showSetup = function() {
-            document.getElementById('setupModal').classList.add('show');
-        };
-        
-        window.expandAll = function() {
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.add('active');
-            });
-        };
-        
-        window.collapseAll = function() {
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-        };
-        
-        window.exportChecklist = function() {
-            window.print();
-        };
-        
-        window.toggleEditMode = function() {
-            window.isEditMode = !window.isEditMode;
-            const btn = document.getElementById('editModeToggle');
+        // Save structure to Firebase
+        function saveStructureToFirebase() {
+            if (!database || !isOnline) return;
             
-            if (window.isEditMode) {
-                btn.classList.add('active');
-                btn.innerHTML = '✓ Сохранить изменения';
-            } else {
-                btn.classList.remove('active');
-                btn.innerHTML = '✏️ Режим редактирования';
-            }
-            
-            renderSections();
-        };
+            database.ref('rocketrevit-structure').set(checklistData)
+                .catch((error) => {
+                    console.error('Save structure error:', error);
+                });
+        }
         
-        window.resetProgress = function() {
-            if (confirm('Вы уверены, что хотите сбросить весь прогресс? Это действие необратимо!')) {
-                window.checkedItems = {};
-                window.itemComments = {};
-                window.itemData = {};
-                
-                if (window.useLocal) {
-                    localStorage.removeItem('rocketRevitChecklist');
-                    localStorage.removeItem('rocketRevitComments');
-                    localStorage.removeItem('rocketRevitItemData');
-                } else if (window.database) {
-                    window.database.ref('rocketrevit-checklist').set({});
-                    window.database.ref('rocketrevit-comments').set({});
-                    window.database.ref('rocketrevit-itemdata').set({});
-                }
-                
-                renderSections();
-                updateProgress();
-            }
-        };
-        
-        window.applyFilters = function() {
-            const responsibleFilter = document.getElementById('filterResponsible').value;
-            const priorityFilter = document.getElementById('filterPriority').value;
-            const sortBy = document.getElementById('sortBy').value;
-            
-            let allItems = [];
-            window.checklistData.forEach((section, sectionIndex) => {
+        // Update checkboxes without re-rendering sections
+        function updateCheckboxes() {
+            checklistData.forEach((section, sectionIndex) => {
                 section.items.forEach((item, itemIndex) => {
                     const key = `${sectionIndex}-${itemIndex}`;
-                    const data = window.itemData[key] || {};
-                    allItems.push({
-                        sectionIndex,
-                        itemIndex,
-                        item,
-                        data,
-                        key
-                    });
-                });
-            });
-            
-            let filteredItems = allItems;
-            
-            if (responsibleFilter) {
-                filteredItems = filteredItems.filter(item => item.data.responsible === responsibleFilter);
-            }
-            
-            if (priorityFilter) {
-                filteredItems = filteredItems.filter(item => item.data.priority === priorityFilter);
-            }
-            
-            if (sortBy === 'deadline') {
-                filteredItems.sort((a, b) => {
-                    const dateA = a.data.deadline || '9999-12-31';
-                    const dateB = b.data.deadline || '9999-12-31';
-                    return dateA.localeCompare(dateB);
-                });
-            } else if (sortBy === 'responsible') {
-                filteredItems.sort((a, b) => {
-                    const respA = a.data.responsible || 'zzz';
-                    const respB = b.data.responsible || 'zzz';
-                    return respA.localeCompare(respB);
-                });
-            } else if (sortBy === 'priority') {
-                const priorityOrder = { 'must': 1, 'high': 2, 'optional': 3, '': 4 };
-                filteredItems.sort((a, b) => {
-                    const prioA = priorityOrder[a.data.priority || ''];
-                    const prioB = priorityOrder[b.data.priority || ''];
-                    return prioA - prioB;
-                });
-            }
-            
-            window.checklistData.forEach((section, sectionIndex) => {
-                section.items.forEach((item, itemIndex) => {
-                    const key = `${sectionIndex}-${itemIndex}`;
-                    const row = document.getElementById(`row-${key}`);
-                    if (row) {
-                        const shouldShow = filteredItems.some(fi => fi.key === key);
-                        row.style.display = shouldShow ? '' : 'none';
+                    const checkbox = document.getElementById(`item-${key}`);
+                    if (checkbox) {
+                        const itemText = checkbox.nextElementSibling;
+                        const isChecked = checkedItems[key] || false;
+                        
+                        checkbox.checked = isChecked;
+                        if (isChecked) {
+                            itemText.style.textDecoration = 'line-through';
+                            itemText.style.color = '#999';
+                        } else {
+                            itemText.style.textDecoration = 'none';
+                            itemText.style.color = '#333';
+                        }
                     }
                 });
             });
-        };
+        }
+        
+        // Update assignees
+        function updateAssignees() {
+            checklistData.forEach((section, sectionIndex) => {
+                section.items.forEach((item, itemIndex) => {
+                    const key = `${sectionIndex}-${itemIndex}`;
+                    const select = document.getElementById(`assignee-${key}`);
+                    if (select && itemAssignees[key]) {
+                        select.value = itemAssignees[key];
+                    }
+                });
+            });
+        }
+        
+        // Update due dates
+        function updateDueDates() {
+            checklistData.forEach((section, sectionIndex) => {
+                section.items.forEach((item, itemIndex) => {
+                    const key = `${sectionIndex}-${itemIndex}`;
+                    const input = document.getElementById(`due-date-${key}`);
+                    if (input && itemDueDates[key]) {
+                        input.value = itemDueDates[key];
+                    }
+                });
+            });
+        }
+        
+        // Update priorities
+        function updatePriorities() {
+            checklistData.forEach((section, sectionIndex) => {
+                section.items.forEach((item, itemIndex) => {
+                    const key = `${sectionIndex}-${itemIndex}`;
+                    const priorityEl = document.getElementById(`priority-${key}`);
+                    if (priorityEl && itemPriorities[key]) {
+                        updatePriorityDisplay(key, itemPriorities[key]);
+                    }
+                });
+            });
+        }
+        
+        // Save to Firebase
+        function saveToFirebase() {
+            if (!database || !isOnline) return;
+            
+            updateSyncStatus('syncing');
+            
+            Promise.all([
+                database.ref('rocketrevit-checklist').set(checkedItems),
+                database.ref('rocketrevit-assignees').set(itemAssignees),
+                database.ref('rocketrevit-duedates').set(itemDueDates),
+                database.ref('rocketrevit-priorities').set(itemPriorities)
+            ])
+            .then(() => {
+                updateSyncStatus();
+            })
+            .catch((error) => {
+                console.error('Save error:', error);
+                updateSyncStatus('error');
+            });
+        }
+        
+        // Update sync status indicator
+        function updateSyncStatus(status = null) {
+            const syncStatus = document.getElementById('syncStatus');
+            const syncText = document.getElementById('syncText');
+            
+            if (useLocal) {
+                syncStatus.className = 'sync-status';
+                syncText.textContent = 'Локальный режим';
+            } else if (status === 'syncing') {
+                syncStatus.className = 'sync-status syncing';
+                syncText.textContent = 'Синхронизация...';
+            } else if (status === 'error') {
+                syncStatus.className = 'sync-status offline';
+                syncText.textContent = 'Ошибка синхронизации';
+            } else if (isOnline) {
+                syncStatus.className = 'sync-status';
+                syncText.textContent = 'Синхронизировано';
+            } else {
+                syncStatus.className = 'sync-status offline';
+                syncText.textContent = 'Офлайн';
+            }
+        }
         
         // Setup form handler
         document.getElementById('setupForm').addEventListener('submit', (e) => {
@@ -1335,312 +1363,535 @@
                 projectId: document.getElementById('projectId').value
             };
             
+            // Save config
             localStorage.setItem('firebaseConfig', JSON.stringify(config));
+            
+            // Initialize Firebase
             initializeFirebase(config);
         });
         
-        // Helper functions
+        // Use local storage instead
+        function useLocalStorage() {
+            useLocal = true;
+            document.getElementById('setupModal').style.display = 'none';
+            loadFromLocal();
+            updateSyncStatus();
+        }
+        
+        // Load from local storage
         function loadFromLocal() {
             const savedStructure = localStorage.getItem('rocketRevitStructure');
             if (savedStructure) {
-                window.checklistData = JSON.parse(savedStructure);
+                checklistData = JSON.parse(savedStructure);
             }
             
             const saved = localStorage.getItem('rocketRevitChecklist');
             if (saved) {
-                window.checkedItems = JSON.parse(saved);
+                checkedItems = JSON.parse(saved);
             }
             
             const savedComments = localStorage.getItem('rocketRevitComments');
             if (savedComments) {
-                window.itemComments = JSON.parse(savedComments);
+                itemComments = JSON.parse(savedComments);
             }
             
-            const savedItemData = localStorage.getItem('rocketRevitItemData');
-            if (savedItemData) {
-                window.itemData = JSON.parse(savedItemData);
+            const savedAssignees = localStorage.getItem('rocketRevitAssignees');
+            if (savedAssignees) {
+                itemAssignees = JSON.parse(savedAssignees);
+            }
+            
+            const savedDueDates = localStorage.getItem('rocketRevitDueDates');
+            if (savedDueDates) {
+                itemDueDates = JSON.parse(savedDueDates);
+            }
+            
+            const savedPriorities = localStorage.getItem('rocketRevitPriorities');
+            if (savedPriorities) {
+                itemPriorities = JSON.parse(savedPriorities);
             }
             
             renderSections();
             updateProgress();
         }
         
+        // Save to local storage
         function saveToLocal() {
-            localStorage.setItem('rocketRevitChecklist', JSON.stringify(window.checkedItems));
-            localStorage.setItem('rocketRevitStructure', JSON.stringify(window.checklistData));
-            localStorage.setItem('rocketRevitComments', JSON.stringify(window.itemComments));
-            localStorage.setItem('rocketRevitItemData', JSON.stringify(window.itemData));
+            localStorage.setItem('rocketRevitChecklist', JSON.stringify(checkedItems));
+            localStorage.setItem('rocketRevitStructure', JSON.stringify(checklistData));
+            localStorage.setItem('rocketRevitComments', JSON.stringify(itemComments));
+            localStorage.setItem('rocketRevitAssignees', JSON.stringify(itemAssignees));
+            localStorage.setItem('rocketRevitDueDates', JSON.stringify(itemDueDates));
+            localStorage.setItem('rocketRevitPriorities', JSON.stringify(itemPriorities));
         }
         
-        function updateSyncStatus(status = null) {
-            const syncStatus = document.getElementById('syncStatus');
-            const syncText = document.getElementById('syncText');
-            
-            if (window.useLocal) {
-                syncStatus.className = 'sync-status';
-                syncText.textContent = 'Локальный режим';
-            } else if (status === 'syncing') {
-                syncStatus.className = 'sync-status syncing';
-                syncText.textContent = 'Синхронизация...';
-            } else if (status === 'error') {
-                syncStatus.className = 'sync-status offline';
-                syncText.textContent = 'Ошибка синхронизации';
-            } else if (window.isOnline) {
-                syncStatus.className = 'sync-status';
-                syncText.textContent = 'Синхронизировано';
-            } else {
-                syncStatus.className = 'sync-status offline';
-                syncText.textContent = 'Офлайн';
+        // Show setup modal
+        function showSetup() {
+            document.getElementById('setupModal').style.display = 'flex';
+        }
+        
+        // Reset progress
+        function resetProgress() {
+            if (confirm('Вы уверены, что хотите сбросить весь прогресс? Это действие необратимо!')) {
+                checkedItems = {};
+                itemAssignees = {};
+                itemDueDates = {};
+                itemPriorities = {};
+                
+                if (useLocal) {
+                    localStorage.removeItem('rocketRevitChecklist');
+                    localStorage.removeItem('rocketRevitAssignees');
+                    localStorage.removeItem('rocketRevitDueDates');
+                    localStorage.removeItem('rocketRevitPriorities');
+                } else if (database) {
+                    database.ref('rocketrevit-checklist').set({});
+                    database.ref('rocketrevit-assignees').set({});
+                    database.ref('rocketrevit-duedates').set({});
+                    database.ref('rocketrevit-priorities').set({});
+                }
+                
+                renderSections();
+                updateProgress();
             }
         }
         
+        // Toggle edit mode
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const btn = document.getElementById('editModeToggle');
+            
+            if (isEditMode) {
+                btn.classList.add('active');
+                btn.innerHTML = '✓ Сохранить изменения';
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '✏️ Режим редактирования';
+            }
+            
+            renderSections();
+        }
+        
+        // Add new item
+        function addItem(sectionIndex) {
+            const input = document.getElementById(`add-input-${sectionIndex}`);
+            const text = input.value.trim();
+            
+            if (text) {
+                checklistData[sectionIndex].items.push(text);
+                input.value = '';
+                
+                if (useLocal) {
+                    saveToLocal();
+                } else {
+                    saveStructureToFirebase();
+                }
+                
+                renderSections();
+                updateProgress();
+            }
+        }
+        
+        // Edit item
+        function editItem(sectionIndex, itemIndex) {
+            const item = checklistData[sectionIndex].items[itemIndex];
+            const container = document.getElementById(`item-container-${sectionIndex}-${itemIndex}`);
+            
+            container.innerHTML = `
+                <input type="checkbox" disabled>
+                <div style="display: flex; gap: 10px; align-items: center; grid-column: 2 / -1;">
+                    <input type="text" class="edit-input" id="edit-${sectionIndex}-${itemIndex}" value="${item.replace(/"/g, '&quot;')}" style="flex: 1;">
+                    <button class="icon-btn" onclick="saveEdit(${sectionIndex}, ${itemIndex})">✓</button>
+                    <button class="icon-btn" onclick="cancelEdit(${sectionIndex}, ${itemIndex})">✗</button>
+                </div>
+            `;
+            
+            document.getElementById(`edit-${sectionIndex}-${itemIndex}`).focus();
+        }
+        
+        // Save edit
+        function saveEdit(sectionIndex, itemIndex) {
+            const input = document.getElementById(`edit-${sectionIndex}-${itemIndex}`);
+            const newText = input.value.trim();
+            
+            if (newText) {
+                checklistData[sectionIndex].items[itemIndex] = newText;
+                
+                if (useLocal) {
+                    saveToLocal();
+                } else {
+                    saveStructureToFirebase();
+                }
+                
+                renderSections();
+            }
+        }
+        
+        // Cancel edit
+        function cancelEdit(sectionIndex, itemIndex) {
+            renderSections();
+        }
+        
+        // Delete item
+        function deleteItem(sectionIndex, itemIndex) {
+            if (confirm('Удалить этот пункт?')) {
+                // Remove item
+                checklistData[sectionIndex].items.splice(itemIndex, 1);
+                
+                // Update checked items keys
+                const newCheckedItems = {};
+                const newAssignees = {};
+                const newDueDates = {};
+                const newPriorities = {};
+                
+                Object.keys(checkedItems).forEach(key => {
+                    const [secIdx, itemIdx] = key.split('-').map(Number);
+                    if (secIdx === sectionIndex && itemIdx > itemIndex) {
+                        newCheckedItems[`${secIdx}-${itemIdx - 1}`] = checkedItems[key];
+                    } else if (secIdx !== sectionIndex || itemIdx !== itemIndex) {
+                        newCheckedItems[key] = checkedItems[key];
+                    }
+                });
+                
+                // Update other arrays similarly
+                [itemAssignees, itemDueDates, itemPriorities].forEach((obj, idx) => {
+                    const newObj = [newAssignees, newDueDates, newPriorities][idx];
+                    Object.keys(obj).forEach(key => {
+                        const [secIdx, itemIdx] = key.split('-').map(Number);
+                        if (secIdx === sectionIndex && itemIdx > itemIndex) {
+                            newObj[`${secIdx}-${itemIdx - 1}`] = obj[key];
+                        } else if (secIdx !== sectionIndex || itemIdx !== itemIndex) {
+                            newObj[key] = obj[key];
+                        }
+                    });
+                });
+                
+                checkedItems = newCheckedItems;
+                itemAssignees = newAssignees;
+                itemDueDates = newDueDates;
+                itemPriorities = newPriorities;
+                
+                if (useLocal) {
+                    saveToLocal();
+                } else {
+                    saveStructureToFirebase();
+                    saveToFirebase();
+                }
+                
+                renderSections();
+                updateProgress();
+            }
+        }
+        
+        // Change assignee
+        function changeAssignee(sectionIndex, itemIndex, assignee) {
+            const key = `${sectionIndex}-${itemIndex}`;
+            if (assignee) {
+                itemAssignees[key] = assignee;
+            } else {
+                delete itemAssignees[key];
+            }
+            
+            if (useLocal) {
+                saveToLocal();
+            } else {
+                saveAssigneesToFirebase();
+            }
+        }
+        
+        // Change due date
+        function changeDueDate(sectionIndex, itemIndex, dueDate) {
+            const key = `${sectionIndex}-${itemIndex}`;
+            if (dueDate) {
+                itemDueDates[key] = dueDate;
+            } else {
+                delete itemDueDates[key];
+            }
+            
+            // Check if task is overdue or due soon
+            const itemEl = document.getElementById(`item-container-${key}`);
+            if (itemEl) {
+                checkDueDateStatus(itemEl, dueDate);
+            }
+            
+            if (useLocal) {
+                saveToLocal();
+            } else {
+                saveDueDatesToFirebase();
+            }
+        }
+        
+        // Check due date status
+        function checkDueDateStatus(itemEl, dueDate) {
+            const today = new Date();
+            const due = new Date(dueDate);
+            const diffTime = due - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            itemEl.classList.remove('overdue', 'due-soon');
+            
+            if (diffDays < 0) {
+                itemEl.classList.add('overdue');
+            } else if (diffDays <= 7) {
+                itemEl.classList.add('due-soon');
+            }
+        }
+        
+        // Change priority
+        function changePriority(sectionIndex, itemIndex) {
+            const key = `${sectionIndex}-${itemIndex}`;
+            const currentPriority = itemPriorities[key] || 'optional';
+            const currentIndex = priorities.indexOf(currentPriority);
+            const nextIndex = (currentIndex + 1) % priorities.length;
+            const newPriority = priorities[nextIndex];
+            
+            itemPriorities[key] = newPriority;
+            updatePriorityDisplay(key, newPriority);
+            
+            if (useLocal) {
+                saveToLocal();
+            } else {
+                savePrioritiesToFirebase();
+            }
+        }
+        
+        // Update priority display
+        function updatePriorityDisplay(key, priority) {
+            const priorityEl = document.getElementById(`priority-${key}`);
+            if (priorityEl) {
+                priorityEl.className = `priority-tag priority-${priority}`;
+                priorityEl.textContent = priorityLabels[priority];
+            }
+        }
+        
+        // Save assignees to Firebase
+        function saveAssigneesToFirebase() {
+            if (!database || !isOnline) return;
+            database.ref('rocketrevit-assignees').set(itemAssignees);
+        }
+        
+        // Save due dates to Firebase
+        function saveDueDatesToFirebase() {
+            if (!database || !isOnline) return;
+            database.ref('rocketrevit-duedates').set(itemDueDates);
+        }
+        
+        // Save priorities to Firebase
+        function savePrioritiesToFirebase() {
+            if (!database || !isOnline) return;
+            database.ref('rocketrevit-priorities').set(itemPriorities);
+        }
+        
+        // Apply sort and filter
+        function applySortAndFilter() {
+            const sortBy = document.getElementById('sortBy').value;
+            const filterAssignee = document.getElementById('filterAssignee').value;
+            const filterPriority = document.getElementById('filterPriority').value;
+            const filterStatus = document.getElementById('filterStatus').value;
+            
+            renderSections();
+        }
+        
+        // Sort items within sections
+        function sortItems(items, sectionIndex, sortBy) {
+            const itemsWithMeta = items.map((item, itemIndex) => {
+                const key = `${sectionIndex}-${itemIndex}`;
+                return {
+                    text: item,
+                    originalIndex: itemIndex,
+                    key: key,
+                    assignee: itemAssignees[key] || '',
+                    dueDate: itemDueDates[key] || '',
+                    priority: itemPriorities[key] || 'optional',
+                    completed: checkedItems[key] || false
+                };
+            });
+            
+            let sortedItems = [...itemsWithMeta];
+            
+            switch (sortBy) {
+                case 'assignee':
+                    sortedItems.sort((a, b) => {
+                        if (a.assignee === b.assignee) return a.originalIndex - b.originalIndex;
+                        if (!a.assignee) return 1;
+                        if (!b.assignee) return -1;
+                        return a.assignee.localeCompare(b.assignee);
+                    });
+                    break;
+                case 'dueDate':
+                    sortedItems.sort((a, b) => {
+                        if (a.dueDate === b.dueDate) return a.originalIndex - b.originalIndex;
+                        if (!a.dueDate) return 1;
+                        if (!b.dueDate) return -1;
+                        return new Date(a.dueDate) - new Date(b.dueDate);
+                    });
+                    break;
+                case 'priority':
+                    const priorityOrder = { 'must-have': 0, 'desirable': 1, 'optional': 2 };
+                    sortedItems.sort((a, b) => {
+                        const aPriority = priorityOrder[a.priority];
+                        const bPriority = priorityOrder[b.priority];
+                        if (aPriority === bPriority) return a.originalIndex - b.originalIndex;
+                        return aPriority - bPriority;
+                    });
+                    break;
+                case 'completion':
+                    sortedItems.sort((a, b) => {
+                        if (a.completed === b.completed) return a.originalIndex - b.originalIndex;
+                        return a.completed ? 1 : -1;
+                    });
+                    break;
+                default:
+                    // Keep original order
+                    break;
+            }
+            
+            return sortedItems;
+        }
+        
+        // Filter items
+        function filterItems(sortedItems, filterAssignee, filterPriority, filterStatus) {
+            return sortedItems.filter(item => {
+                // Filter by assignee
+                if (filterAssignee && item.assignee !== filterAssignee) {
+                    return false;
+                }
+                
+                // Filter by priority
+                if (filterPriority && item.priority !== filterPriority) {
+                    return false;
+                }
+                
+                // Filter by status
+                if (filterStatus) {
+                    const today = new Date();
+                    const due = item.dueDate ? new Date(item.dueDate) : null;
+                    
+                    switch (filterStatus) {
+                        case 'completed':
+                            if (!item.completed) return false;
+                            break;
+                        case 'pending':
+                            if (item.completed) return false;
+                            break;
+                        case 'overdue':
+                            if (item.completed || !due || due >= today) return false;
+                            break;
+                    }
+                }
+                
+                return true;
+            });
+        }
+        
         function updateProgress() {
-            const total = window.checklistData.reduce((sum, section) => sum + section.items.length, 0);
-            const checked = Object.values(window.checkedItems).filter(Boolean).length;
-            const doing = Object.values(window.itemData).filter(data => data.doing).length;
+            const total = checklistData.reduce((sum, section) => sum + section.items.length, 0);
+            const checked = Object.values(checkedItems).filter(Boolean).length;
             const percentage = Math.round((checked / total) * 100);
             
             const progressBar = document.getElementById('progressBar');
             progressBar.style.width = percentage + '%';
             progressBar.textContent = percentage + '%';
             
+            // Update stats
             document.getElementById('totalTasks').textContent = total;
             document.getElementById('completedTasks').textContent = checked;
             document.getElementById('remainingTasks').textContent = total - checked;
-            document.getElementById('doingTasks').textContent = doing;
             
-            window.checklistData.forEach((section, sectionIndex) => {
+            // Update section progress
+            checklistData.forEach((section, sectionIndex) => {
                 const sectionProgress = document.getElementById(`progress-${sectionIndex}`);
                 if (sectionProgress) {
                     const sectionChecked = section.items.filter((_, itemIndex) => 
-                        window.checkedItems[`${sectionIndex}-${itemIndex}`]
+                        checkedItems[`${sectionIndex}-${itemIndex}`]
                     ).length;
                     sectionProgress.textContent = `${sectionChecked}/${section.items.length}`;
                 }
             });
         }
         
-        function updateCheckboxes() {
-            window.checklistData.forEach((section, sectionIndex) => {
-                section.items.forEach((item, itemIndex) => {
-                    const key = `${sectionIndex}-${itemIndex}`;
-                    const checkbox = document.getElementById(`item-${key}`);
-                    if (checkbox) {
-                        const isChecked = window.checkedItems[key] || false;
-                        checkbox.checked = isChecked;
-                    }
-                });
-            });
-        }
-        
-        function updateItemDataDisplay() {
-            window.checklistData.forEach((section, sectionIndex) => {
-                section.items.forEach((item, itemIndex) => {
-                    const key = `${sectionIndex}-${itemIndex}`;
-                    const data = window.itemData[key] || {};
-                    
-                    const doingCheckbox = document.getElementById(`doing-${key}`);
-                    if (doingCheckbox) {
-                        doingCheckbox.checked = data.doing || false;
-                    }
-                    
-                    const responsibleSelect = document.getElementById(`responsible-${key}`);
-                    if (responsibleSelect) {
-                        responsibleSelect.value = data.responsible || '';
-                    }
-                    
-                    const deadlineInput = document.getElementById(`deadline-${key}`);
-                    if (deadlineInput) {
-                        deadlineInput.value = data.deadline || '';
-                    }
-                    
-                    const prioritySelect = document.getElementById(`priority-${key}`);
-                    if (prioritySelect) {
-                        prioritySelect.value = data.priority || '';
-                    }
-                });
-            });
-        }
-        
-        function updateCommentsDisplay() {
-            window.checklistData.forEach((section, sectionIndex) => {
-                section.items.forEach((item, itemIndex) => {
-                    updateCommentPreview(sectionIndex, itemIndex);
-                    renderCommentsInChat(sectionIndex, itemIndex);
-                });
-            });
-        }
-        
-        function updateCommentPreview(sectionIndex, itemIndex) {
-            const key = `${sectionIndex}-${itemIndex}`;
-            const comments = window.itemComments[key] || [];
-            const preview = document.getElementById(`preview-${key}`);
-            const badge = document.getElementById(`badge-${key}`);
-            
-            if (!preview) return;
-            
-            if (comments.length === 0) {
-                preview.textContent = 'Добавить комментарий...';
-                preview.className = 'comment-preview';
-                badge.style.display = 'none';
-            } else {
-                const lastComment = comments[comments.length - 1];
-                preview.textContent = `${lastComment.author}: ${lastComment.text}`;
-                preview.className = 'comment-preview has-comments';
-                badge.style.display = 'flex';
-                badge.textContent = comments.length;
-            }
-        }
-        
-        function renderCommentsInChat(sectionIndex, itemIndex) {
-            const key = `${sectionIndex}-${itemIndex}`;
-            const comments = window.itemComments[key] || [];
-            const messagesContainer = document.getElementById(`messages-${key}`);
-            
-            if (!messagesContainer) return;
-            
-            if (comments.length === 0) {
-                messagesContainer.innerHTML = '<div class="no-comments">Нет комментариев. Начните обсуждение!</div>';
-            } else {
-                messagesContainer.innerHTML = comments.map(comment => {
-                    const date = new Date(comment.date);
-                    const dateStr = date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-                    
-                    return `
-                        <div class="comment-message">
-                            <div class="comment-message-header">
-                                <span class="comment-author">${comment.author}</span>
-                                <span class="comment-date">${dateStr}</span>
-                            </div>
-                            <div class="comment-text">${comment.text.replace(/\n/g, '<br>')}</div>
-                        </div>
-                    `;
-                }).join('');
-            }
-        }
-        
-        window.toggleSection = function(index) {
+        function toggleSection(index) {
             const section = document.getElementById(`section-${index}`);
             section.classList.toggle('active');
-        };
+        }
         
-        window.toggleItem = function(sectionIndex, itemIndex) {
+        function expandAll() {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('active');
+            });
+        }
+        
+        function collapseAll() {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+        }
+        
+        function toggleItem(sectionIndex, itemIndex) {
             const key = `${sectionIndex}-${itemIndex}`;
-            window.checkedItems[key] = !window.checkedItems[key];
+            checkedItems[key] = !checkedItems[key];
+            
+            // Update only the checkbox and item text without re-rendering
+            const checkbox = document.getElementById(`item-${key}`);
+            const itemText = checkbox.nextElementSibling;
+            
+            if (checkedItems[key]) {
+                checkbox.checked = true;
+                itemText.style.textDecoration = 'line-through';
+                itemText.style.color = '#999';
+            } else {
+                checkbox.checked = false;
+                itemText.style.textDecoration = 'none';
+                itemText.style.color = '#333';
+            }
             
             updateProgress();
             
-            if (window.useLocal) {
+            // Save to appropriate storage
+            if (useLocal) {
                 saveToLocal();
             } else {
                 saveToFirebase();
             }
-        };
+        }
         
-        window.toggleDoing = function(sectionIndex, itemIndex) {
-            const key = `${sectionIndex}-${itemIndex}`;
-            if (!window.itemData[key]) {
-                window.itemData[key] = {};
-            }
-            window.itemData[key].doing = !window.itemData[key].doing;
-            
-            updateProgress();
-            
-            if (window.useLocal) {
-                saveToLocal();
-            } else {
-                saveItemDataToFirebase();
-            }
-        };
+        function exportChecklist() {
+            window.print();
+        }
         
-        window.updateResponsible = function(sectionIndex, itemIndex, value) {
+        // Add comment functions
+        function toggleComments(sectionIndex, itemIndex) {
             const key = `${sectionIndex}-${itemIndex}`;
-            if (!window.itemData[key]) {
-                window.itemData[key] = {};
-            }
-            window.itemData[key].responsible = value;
+            const commentsDiv = document.getElementById(`comments-${key}`);
             
-            if (window.useLocal) {
-                saveToLocal();
-            } else {
-                saveItemDataToFirebase();
-            }
-        };
-        
-        window.updateDeadline = function(sectionIndex, itemIndex, value) {
-            const key = `${sectionIndex}-${itemIndex}`;
-            if (!window.itemData[key]) {
-                window.itemData[key] = {};
-            }
-            window.itemData[key].deadline = value;
-            
-            if (window.useLocal) {
-                saveToLocal();
-            } else {
-                saveItemDataToFirebase();
-            }
-        };
-        
-        window.updatePriority = function(sectionIndex, itemIndex, value) {
-            const key = `${sectionIndex}-${itemIndex}`;
-            if (!window.itemData[key]) {
-                window.itemData[key] = {};
-            }
-            window.itemData[key].priority = value;
-            
-            if (window.useLocal) {
-                saveToLocal();
-            } else {
-                saveItemDataToFirebase();
-            }
-        };
-        
-        window.toggleCommentChat = function(sectionIndex, itemIndex, event) {
-            event.stopPropagation();
-            const key = `${sectionIndex}-${itemIndex}`;
-            
-            document.querySelectorAll('.comment-expanded').forEach(chat => {
-                if (chat.id !== `chat-${key}`) {
-                    chat.classList.remove('active');
-                }
-            });
-            
-            const chat = document.getElementById(`chat-${key}`);
-            chat.classList.toggle('active');
-            
-            if (chat.classList.contains('active')) {
-                const authorInput = document.getElementById(`author-${key}`);
-                const textInput = document.getElementById(`text-${key}`);
-                if (window.currentUserName) {
-                    textInput.focus();
+            if (commentsDiv.style.display === 'none') {
+                commentsDiv.style.display = 'block';
+                // Focus on author input if no name saved
+                if (!currentUserName) {
+                    const authorInput = document.getElementById(`author-${key}`);
+                    if (authorInput) authorInput.focus();
                 } else {
-                    authorInput.focus();
+                    const commentInput = document.getElementById(`comment-input-${key}`);
+                    if (commentInput) commentInput.focus();
                 }
+            } else {
+                commentsDiv.style.display = 'none';
             }
-        };
+        }
         
-        window.closeCommentChat = function(sectionIndex, itemIndex, event) {
-            event.stopPropagation();
-            const key = `${sectionIndex}-${itemIndex}`;
-            document.getElementById(`chat-${key}`).classList.remove('active');
-        };
-        
-        window.addCommentFromChat = function(sectionIndex, itemIndex, event) {
-            if (event) event.preventDefault();
-            
+        function addComment(sectionIndex, itemIndex) {
             const key = `${sectionIndex}-${itemIndex}`;
             const authorInput = document.getElementById(`author-${key}`);
-            const textInput = document.getElementById(`text-${key}`);
+            const commentInput = document.getElementById(`comment-input-${key}`);
             
             const author = authorInput.value.trim() || 'Аноним';
-            const text = textInput.value.trim();
+            const text = commentInput.value.trim();
             
             if (text) {
-                window.currentUserName = author;
-                localStorage.setItem('rocketRevitUserName', window.currentUserName);
+                // Save user name
+                currentUserName = author;
+                localStorage.setItem('rocketRevitUserName', currentUserName);
                 
-                if (!window.itemComments[key]) {
-                    window.itemComments[key] = [];
+                if (!itemComments[key]) {
+                    itemComments[key] = [];
                 }
                 
                 const comment = {
@@ -1650,43 +1901,261 @@
                     date: new Date().toISOString()
                 };
                 
-                window.itemComments[key].push(comment);
+                itemComments[key].push(comment);
                 
-                textInput.value = '';
+                // Clear input
+                commentInput.value = '';
                 
-                if (window.useLocal) {
+                // Save
+                if (useLocal) {
                     saveToLocal();
                 } else {
                     saveCommentsToFirebase();
                 }
                 
-                renderCommentsInChat(sectionIndex, itemIndex);
-                updateCommentPreview(sectionIndex, itemIndex);
-                
-                const messages = document.getElementById(`messages-${key}`);
-                messages.scrollTop = messages.scrollHeight;
+                // Re-render comments
+                renderComments(sectionIndex, itemIndex);
+                updateCommentIndicator(sectionIndex, itemIndex);
             }
-        };
+        }
         
-        window.addItem = function(sectionIndex) {
-            const input = document.getElementById(`add-input-${sectionIndex}`);
-            const text = input.value.trim();
+        function deleteComment(sectionIndex, itemIndex, commentId) {
+            if (confirm('Удалить комментарий?')) {
+                const key = `${sectionIndex}-${itemIndex}`;
+                if (itemComments[key]) {
+                    itemComments[key] = itemComments[key].filter(c => c.id !== commentId);
+                    if (itemComments[key].length === 0) {
+                        delete itemComments[key];
+                    }
+                    
+                    if (useLocal) {
+                        saveToLocal();
+                    } else {
+                        saveCommentsToFirebase();
+                    }
+                    
+                    renderComments(sectionIndex, itemIndex);
+                    updateCommentIndicator(sectionIndex, itemIndex);
+                }
+            }
+        }
+        
+        function saveCommentsToFirebase() {
+            if (!database || !isOnline) return;
             
-            if (text) {
-                window.checklistData[sectionIndex].items.push(text);
-                input.value = '';
+            database.ref('rocketrevit-comments').set(itemComments)
+                .catch((error) => {
+                    console.error('Save comments error:', error);
+                });
+        }
+        
+        function renderComments(sectionIndex, itemIndex) {
+            const key = `${sectionIndex}-${itemIndex}`;
+            const commentsContainer = document.getElementById(`comments-list-${key}`);
+            
+            if (!commentsContainer) return;
+            
+            const comments = itemComments[key] || [];
+            
+            commentsContainer.innerHTML = comments.map(comment => {
+                const date = new Date(comment.date);
+                const dateStr = date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
                 
-                if (window.useLocal) {
-                    saveToLocal();
-                } else {
-                    saveStructureToFirebase();
+                return `
+                    <div class="comment">
+                        <div class="comment-header">
+                            <span class="comment-author">${comment.author}</span>
+                            <div>
+                                <span class="comment-date">${dateStr}</span>
+                                ${isEditMode ? `<span class="delete-comment" onclick="deleteComment(${sectionIndex}, ${itemIndex}, ${comment.id})"> 🗑️</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="comment-text">${comment.text.replace(/\n/g, '<br>')}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateCommentIndicator(sectionIndex, itemIndex) {
+            const key = `${sectionIndex}-${itemIndex}`;
+            const indicator = document.getElementById(`comment-indicator-${key}`);
+            
+            if (!indicator) return;
+            
+            const comments = itemComments[key] || [];
+            if (comments.length > 0) {
+                indicator.style.display = 'inline-flex';
+                indicator.textContent = comments.length;
+            } else {
+                indicator.style.display = 'none';
+            }
+        }
+        
+        function updateCommentsDisplay() {
+            checklistData.forEach((section, sectionIndex) => {
+                section.items.forEach((item, itemIndex) => {
+                    updateCommentIndicator(sectionIndex, itemIndex);
+                    renderComments(sectionIndex, itemIndex);
+                });
+            });
+        }
+        
+        function renderSections() {
+            const container = document.getElementById('sections');
+            container.innerHTML = '';
+            
+            const sortBy = document.getElementById('sortBy')?.value || 'default';
+            const filterAssignee = document.getElementById('filterAssignee')?.value || '';
+            const filterPriority = document.getElementById('filterPriority')?.value || '';
+            const filterStatus = document.getElementById('filterStatus')?.value || '';
+            
+            checklistData.forEach((section, sectionIndex) => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'section';
+                sectionDiv.id = `section-${sectionIndex}`;
+                
+                // Sort and filter items
+                const sortedItems = sortItems(section.items, sectionIndex, sortBy);
+                const filteredItems = filterItems(sortedItems, filterAssignee, filterPriority, filterStatus);
+                
+                // Skip section if no items match filter
+                if (filteredItems.length === 0 && (filterAssignee || filterPriority || filterStatus)) {
+                    return;
                 }
                 
-                renderSections();
-                updateProgress();
-            }
-        };
+                const sectionChecked = section.items.filter((_, itemIndex) => 
+                    checkedItems[`${sectionIndex}-${itemIndex}`]
+                ).length;
+                
+                let sectionHTML = `
+                    <div class="section-header" onclick="toggleSection(${sectionIndex})">
+                        <span class="section-title">${section.title}</span>
+                        <div class="section-actions">
+                            <span class="section-progress" id="progress-${sectionIndex}">${sectionChecked}/${section.items.length}</span>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                `;
+                
+                // Render items
+                const itemsToRender = filteredItems.length > 0 ? filteredItems : sortedItems;
+                
+                itemsToRender.forEach((itemMeta) => {
+                    const itemIndex = itemMeta.originalIndex;
+                    const item = itemMeta.text;
+                    const key = `${sectionIndex}-${itemIndex}`;
+                    const isChecked = checkedItems[key] || false;
+                    const comments = itemComments[key] || [];
+                    const assignee = itemAssignees[key] || '';
+                    const dueDate = itemDueDates[key] || '';
+                    const priority = itemPriorities[key] || 'optional';
+                    
+                    // Check if item should have special styling based on due date
+                    let itemClass = 'checklist-item';
+                    if (dueDate && !isChecked) {
+                        const today = new Date();
+                        const due = new Date(dueDate);
+                        const diffDays = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+                        if (diffDays < 0) {
+                            itemClass += ' overdue';
+                        } else if (diffDays <= 7) {
+                            itemClass += ' due-soon';
+                        }
+                    }
+                    
+                    sectionHTML += `
+                        <div class="${itemClass}" id="item-container-${key}">
+                            <input type="checkbox" 
+                                   id="item-${key}" 
+                                   ${isChecked ? 'checked' : ''}
+                                   onchange="toggleItem(${sectionIndex}, ${itemIndex})">
+                            <div class="item-text">${itemIndex + 1}. ${item}
+                                <span class="comment-indicator" 
+                                      id="comment-indicator-${key}" 
+                                      onclick="toggleComments(${sectionIndex}, ${itemIndex})"
+                                      title="Комментарии"
+                                      style="${comments.length > 0 ? '' : 'display: none;'}">
+                                    ${comments.length}
+                                </span>
+                            </div>
+                            <select class="assignee-select" 
+                                    id="assignee-${key}"
+                                    onchange="changeAssignee(${sectionIndex}, ${itemIndex}, this.value)"
+                                    ${isEditMode ? '' : 'disabled'}>
+                                ${assignees.map(a => `<option value="${a}" ${assignee === a ? 'selected' : ''}>${a || 'Не назначен'}</option>`).join('')}
+                            </select>
+                            <input type="date" 
+                                   class="due-date-input"
+                                   id="due-date-${key}"
+                                   value="${dueDate}"
+                                   onchange="changeDueDate(${sectionIndex}, ${itemIndex}, this.value)"
+                                   ${isEditMode ? '' : 'disabled'}>
+                            <div class="priority-tag priority-${priority}" 
+                                 id="priority-${key}"
+                                 onclick="${isEditMode ? `changePriority(${sectionIndex}, ${itemIndex})` : ''}"
+                                 style="cursor: ${isEditMode ? 'pointer' : 'default'}">
+                                ${priorityLabels[priority]}
+                            </div>
+                            <div class="item-actions">
+                                <button class="icon-btn" onclick="toggleComments(${sectionIndex}, ${itemIndex})" title="Комментарии">💬</button>
+                                ${isEditMode ? `
+                                    <button class="icon-btn" onclick="editItem(${sectionIndex}, ${itemIndex})" title="Редактировать">✏️</button>
+                                    <button class="icon-btn" onclick="deleteItem(${sectionIndex}, ${itemIndex})" title="Удалить">🗑️</button>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <div class="comment-section" id="comments-${key}" style="display: none;">
+                            <div id="comments-list-${key}"></div>
+                            <div class="comment-input-container">
+                                <input type="text" 
+                                       class="author-input" 
+                                       id="author-${key}" 
+                                       placeholder="Ваше имя" 
+                                       value="${currentUserName}"
+                                       onkeypress="if(event.key==='Enter') document.getElementById('comment-input-${key}').focus()">
+                                <textarea class="comment-input" 
+                                          id="comment-input-${key}" 
+                                          placeholder="Добавить комментарий..."
+                                          onkeypress="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); addComment(${sectionIndex}, ${itemIndex}); }"></textarea>
+                                <button class="btn-primary" onclick="addComment(${sectionIndex}, ${itemIndex})">Отправить</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                // Add new item input (only in edit mode)
+                if (isEditMode) {
+                    sectionHTML += `
+                        <div class="add-item-container">
+                            <div></div>
+                            <input type="text" 
+                                   class="add-item-input" 
+                                   id="add-input-${sectionIndex}" 
+                                   placeholder="Добавить новый пункт..."
+                                   onkeypress="if(event.key==='Enter') addItem(${sectionIndex})">
+                            <select disabled><option>Не назначен</option></select>
+                            <input type="date" disabled>
+                            <div class="priority-tag priority-optional">Опционально</div>
+                            <button class="btn-success" onclick="addItem(${sectionIndex})">+ Добавить</button>
+                        </div>
+                    `;
+                }
+                
+                sectionHTML += '</div>';
+                sectionDiv.innerHTML = sectionHTML;
+                container.appendChild(sectionDiv);
+            });
+            
+            // Update checkboxes state and render comments
+            updateCheckboxes();
+            updateCommentsDisplay();
+            updateAssignees();
+            updateDueDates();
+            updatePriorities();
+        }
         
-        window.editItem = function(sectionIndex, itemIndex) {
-            const item = window.checklistData[sectionIndex].items[itemIndex];
-            const container =
+        // Initialize
+        checkFirebaseConfig();
+    </script>
+</body>
+</html>
