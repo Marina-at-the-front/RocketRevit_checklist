@@ -283,7 +283,7 @@
         
         .checklist-item {
             display: grid;
-            grid-template-columns: 30px 1fr 180px 140px 120px auto;
+            grid-template-columns: 30px 1fr 100px 180px 140px 120px auto;
             gap: 15px;
             align-items: center;
             padding: 15px 0;
@@ -321,6 +321,33 @@
         .checklist-item input[type="checkbox"]:checked + .item-text {
             text-decoration: line-through;
             color: #999;
+        }
+        
+        .execution-select {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            background: white;
+            cursor: pointer;
+            min-width: 90px;
+        }
+        
+        .execution-select:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+        
+        .execution-select[value="Выполняем"] {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+            border-color: #4caf50;
+        }
+        
+        .execution-select[value="Не выполняем"] {
+            background-color: #ffebee;
+            color: #c62828;
+            border-color: #f44336;
         }
         
         .assignee-select, .due-date-input {
@@ -490,7 +517,7 @@
         
         .add-item-container {
             display: grid;
-            grid-template-columns: 30px 1fr 180px 140px 120px auto;
+            grid-template-columns: 30px 1fr 100px 180px 140px 120px auto;
             gap: 15px;
             margin-top: 15px;
             padding-top: 15px;
@@ -677,7 +704,7 @@
             
             .checklist-item {
                 page-break-inside: avoid;
-                grid-template-columns: 30px 1fr 120px 100px 80px;
+                grid-template-columns: 30px 1fr 90px 120px 100px 80px;
                 font-size: 12px;
             }
         }
@@ -806,6 +833,10 @@
                 <div class="stat-number" id="remainingTasks">0</div>
                 <div class="stat-label">Осталось</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-number" id="executingTasks">0</div>
+                <div class="stat-label">Выполняем</div>
+            </div>
         </div>
         
         <div class="progress-bar">
@@ -829,6 +860,7 @@
                     <option value="dueDate">По сроку выполнения</option>
                     <option value="priority">По приоритету</option>
                     <option value="completion">По статусу выполнения</option>
+                    <option value="execution">По выполнению</option>
                 </select>
             </div>
             
@@ -860,6 +892,15 @@
                     <option value="completed">Выполненные</option>
                     <option value="pending">Невыполненные</option>
                     <option value="overdue">Просроченные</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Выполнение:</label>
+                <select id="filterExecution" onchange="applySortAndFilter()">
+                    <option value="">Все</option>
+                    <option value="Выполняем">Выполняем</option>
+                    <option value="Не выполняем">Не выполняем</option>
                 </select>
             </div>
         </div>
@@ -1093,6 +1134,7 @@
         let itemAssignees = {};
         let itemDueDates = {};
         let itemPriorities = {};
+        let itemExecutions = {};
         let database = null;
         let isOnline = false;
         let useLocal = false;
@@ -1106,6 +1148,7 @@
             'desirable': 'Крайне желательно',
             'optional': 'Опционально'
         };
+        const executionOptions = ['Выполняем', 'Не выполняем'];
         
         // Check for saved Firebase config
         function checkFirebaseConfig() {
@@ -1234,6 +1277,18 @@
                 }
                 updatePriorities();
             });
+            
+            // Load executions
+            const executionsRef = database.ref('rocketrevit-executions');
+            executionsRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    itemExecutions = data;
+                } else {
+                    itemExecutions = {};
+                }
+                updateExecutions();
+            });
         }
         
         // Save structure to Firebase
@@ -1308,6 +1363,29 @@
             });
         }
         
+        // Update executions
+        function updateExecutions() {
+            checklistData.forEach((section, sectionIndex) => {
+                section.items.forEach((item, itemIndex) => {
+                    const key = `${sectionIndex}-${itemIndex}`;
+                    const select = document.getElementById(`execution-${key}`);
+                    if (select && itemExecutions[key]) {
+                        select.value = itemExecutions[key];
+                        // Update select style
+                        if (itemExecutions[key] === 'Выполняем') {
+                            select.style.backgroundColor = '#e8f5e8';
+                            select.style.color = '#2e7d32';
+                            select.style.borderColor = '#4caf50';
+                        } else if (itemExecutions[key] === 'Не выполняем') {
+                            select.style.backgroundColor = '#ffebee';
+                            select.style.color = '#c62828';
+                            select.style.borderColor = '#f44336';
+                        }
+                    }
+                });
+            });
+        }
+        
         // Save to Firebase
         function saveToFirebase() {
             if (!database || !isOnline) return;
@@ -1318,7 +1396,8 @@
                 database.ref('rocketrevit-checklist').set(checkedItems),
                 database.ref('rocketrevit-assignees').set(itemAssignees),
                 database.ref('rocketrevit-duedates').set(itemDueDates),
-                database.ref('rocketrevit-priorities').set(itemPriorities)
+                database.ref('rocketrevit-priorities').set(itemPriorities),
+                database.ref('rocketrevit-executions').set(itemExecutions)
             ])
             .then(() => {
                 updateSyncStatus();
@@ -1410,6 +1489,11 @@
                 itemPriorities = JSON.parse(savedPriorities);
             }
             
+            const savedExecutions = localStorage.getItem('rocketRevitExecutions');
+            if (savedExecutions) {
+                itemExecutions = JSON.parse(savedExecutions);
+            }
+            
             renderSections();
             updateProgress();
         }
@@ -1422,6 +1506,7 @@
             localStorage.setItem('rocketRevitAssignees', JSON.stringify(itemAssignees));
             localStorage.setItem('rocketRevitDueDates', JSON.stringify(itemDueDates));
             localStorage.setItem('rocketRevitPriorities', JSON.stringify(itemPriorities));
+            localStorage.setItem('rocketRevitExecutions', JSON.stringify(itemExecutions));
         }
         
         // Show setup modal
@@ -1436,17 +1521,20 @@
                 itemAssignees = {};
                 itemDueDates = {};
                 itemPriorities = {};
+                itemExecutions = {};
                 
                 if (useLocal) {
                     localStorage.removeItem('rocketRevitChecklist');
                     localStorage.removeItem('rocketRevitAssignees');
                     localStorage.removeItem('rocketRevitDueDates');
                     localStorage.removeItem('rocketRevitPriorities');
+                    localStorage.removeItem('rocketRevitExecutions');
                 } else if (database) {
                     database.ref('rocketrevit-checklist').set({});
                     database.ref('rocketrevit-assignees').set({});
                     database.ref('rocketrevit-duedates').set({});
                     database.ref('rocketrevit-priorities').set({});
+                    database.ref('rocketrevit-executions').set({});
                 }
                 
                 renderSections();
@@ -1541,6 +1629,7 @@
                 const newAssignees = {};
                 const newDueDates = {};
                 const newPriorities = {};
+                const newExecutions = {};
                 
                 Object.keys(checkedItems).forEach(key => {
                     const [secIdx, itemIdx] = key.split('-').map(Number);
@@ -1552,8 +1641,8 @@
                 });
                 
                 // Update other arrays similarly
-                [itemAssignees, itemDueDates, itemPriorities].forEach((obj, idx) => {
-                    const newObj = [newAssignees, newDueDates, newPriorities][idx];
+                [itemAssignees, itemDueDates, itemPriorities, itemExecutions].forEach((obj, idx) => {
+                    const newObj = [newAssignees, newDueDates, newPriorities, newExecutions][idx];
                     Object.keys(obj).forEach(key => {
                         const [secIdx, itemIdx] = key.split('-').map(Number);
                         if (secIdx === sectionIndex && itemIdx > itemIndex) {
@@ -1568,6 +1657,7 @@
                 itemAssignees = newAssignees;
                 itemDueDates = newDueDates;
                 itemPriorities = newPriorities;
+                itemExecutions = newExecutions;
                 
                 if (useLocal) {
                     saveToLocal();
@@ -1579,6 +1669,48 @@
                 renderSections();
                 updateProgress();
             }
+        }
+        
+        // Change execution status
+        function changeExecution(sectionIndex, itemIndex, execution) {
+            const key = `${sectionIndex}-${itemIndex}`;
+            if (execution) {
+                itemExecutions[key] = execution;
+            } else {
+                delete itemExecutions[key];
+            }
+            
+            // Update select style
+            const select = document.getElementById(`execution-${key}`);
+            if (select) {
+                if (execution === 'Выполняем') {
+                    select.style.backgroundColor = '#e8f5e8';
+                    select.style.color = '#2e7d32';
+                    select.style.borderColor = '#4caf50';
+                } else if (execution === 'Не выполняем') {
+                    select.style.backgroundColor = '#ffebee';
+                    select.style.color = '#c62828';
+                    select.style.borderColor = '#f44336';
+                } else {
+                    select.style.backgroundColor = 'white';
+                    select.style.color = 'inherit';
+                    select.style.borderColor = '#ddd';
+                }
+            }
+            
+            if (useLocal) {
+                saveToLocal();
+            } else {
+                saveExecutionsToFirebase();
+            }
+            
+            updateProgress();
+        }
+        
+        // Save executions to Firebase
+        function saveExecutionsToFirebase() {
+            if (!database || !isOnline) return;
+            database.ref('rocketrevit-executions').set(itemExecutions);
         }
         
         // Change assignee
@@ -1686,6 +1818,7 @@
             const filterAssignee = document.getElementById('filterAssignee').value;
             const filterPriority = document.getElementById('filterPriority').value;
             const filterStatus = document.getElementById('filterStatus').value;
+            const filterExecution = document.getElementById('filterExecution').value;
             
             renderSections();
         }
@@ -1701,7 +1834,8 @@
                     assignee: itemAssignees[key] || '',
                     dueDate: itemDueDates[key] || '',
                     priority: itemPriorities[key] || 'optional',
-                    completed: checkedItems[key] || false
+                    completed: checkedItems[key] || false,
+                    execution: itemExecutions[key] || ''
                 };
             });
             
@@ -1739,6 +1873,16 @@
                         return a.completed ? 1 : -1;
                     });
                     break;
+                case 'execution':
+                    sortedItems.sort((a, b) => {
+                        if (a.execution === b.execution) return a.originalIndex - b.originalIndex;
+                        if (!a.execution) return 1;
+                        if (!b.execution) return -1;
+                        if (a.execution === 'Выполняем' && b.execution === 'Не выполняем') return -1;
+                        if (a.execution === 'Не выполняем' && b.execution === 'Выполняем') return 1;
+                        return 0;
+                    });
+                    break;
                 default:
                     // Keep original order
                     break;
@@ -1748,7 +1892,7 @@
         }
         
         // Filter items
-        function filterItems(sortedItems, filterAssignee, filterPriority, filterStatus) {
+        function filterItems(sortedItems, filterAssignee, filterPriority, filterStatus, filterExecution) {
             return sortedItems.filter(item => {
                 // Filter by assignee
                 if (filterAssignee && item.assignee !== filterAssignee) {
@@ -1757,6 +1901,11 @@
                 
                 // Filter by priority
                 if (filterPriority && item.priority !== filterPriority) {
+                    return false;
+                }
+                
+                // Filter by execution
+                if (filterExecution && item.execution !== filterExecution) {
                     return false;
                 }
                 
@@ -1791,10 +1940,14 @@
             progressBar.style.width = percentage + '%';
             progressBar.textContent = percentage + '%';
             
+            // Count executing tasks
+            const executingCount = Object.values(itemExecutions).filter(exec => exec === 'Выполняем').length;
+            
             // Update stats
             document.getElementById('totalTasks').textContent = total;
             document.getElementById('completedTasks').textContent = checked;
             document.getElementById('remainingTasks').textContent = total - checked;
+            document.getElementById('executingTasks').textContent = executingCount;
             
             // Update section progress
             checklistData.forEach((section, sectionIndex) => {
@@ -1967,7 +2120,7 @@
                             <span class="comment-author">${comment.author}</span>
                             <div>
                                 <span class="comment-date">${dateStr}</span>
-                                ${isEditMode ? `<span class="delete-comment" onclick="deleteComment(${sectionIndex}, ${itemIndex}, ${comment.id})"> 🗑️</span>` : ''}
+                                <span class="delete-comment" onclick="deleteComment(${sectionIndex}, ${itemIndex}, ${comment.id})"> 🗑️</span>
                             </div>
                         </div>
                         <div class="comment-text">${comment.text.replace(/\n/g, '<br>')}</div>
@@ -2008,6 +2161,7 @@
             const filterAssignee = document.getElementById('filterAssignee')?.value || '';
             const filterPriority = document.getElementById('filterPriority')?.value || '';
             const filterStatus = document.getElementById('filterStatus')?.value || '';
+            const filterExecution = document.getElementById('filterExecution')?.value || '';
             
             checklistData.forEach((section, sectionIndex) => {
                 const sectionDiv = document.createElement('div');
@@ -2016,10 +2170,10 @@
                 
                 // Sort and filter items
                 const sortedItems = sortItems(section.items, sectionIndex, sortBy);
-                const filteredItems = filterItems(sortedItems, filterAssignee, filterPriority, filterStatus);
+                const filteredItems = filterItems(sortedItems, filterAssignee, filterPriority, filterStatus, filterExecution);
                 
                 // Skip section if no items match filter
-                if (filteredItems.length === 0 && (filterAssignee || filterPriority || filterStatus)) {
+                if (filteredItems.length === 0 && (filterAssignee || filterPriority || filterStatus || filterExecution)) {
                     return;
                 }
                 
@@ -2049,6 +2203,7 @@
                     const assignee = itemAssignees[key] || '';
                     const dueDate = itemDueDates[key] || '';
                     const priority = itemPriorities[key] || 'optional';
+                    const execution = itemExecutions[key] || '';
                     
                     // Check if item should have special styling based on due date
                     let itemClass = 'checklist-item';
@@ -2078,22 +2233,28 @@
                                     ${comments.length}
                                 </span>
                             </div>
+                            <select class="execution-select" 
+                                    id="execution-${key}"
+                                    onchange="changeExecution(${sectionIndex}, ${itemIndex}, this.value)"
+                                    style="${execution === 'Выполняем' ? 'background-color: #e8f5e8; color: #2e7d32; border-color: #4caf50;' : 
+                                             execution === 'Не выполняем' ? 'background-color: #ffebee; color: #c62828; border-color: #f44336;' : ''}">
+                                <option value="">-</option>
+                                ${executionOptions.map(e => `<option value="${e}" ${execution === e ? 'selected' : ''}>${e}</option>`).join('')}
+                            </select>
                             <select class="assignee-select" 
                                     id="assignee-${key}"
-                                    onchange="changeAssignee(${sectionIndex}, ${itemIndex}, this.value)"
-                                    ${isEditMode ? '' : 'disabled'}>
+                                    onchange="changeAssignee(${sectionIndex}, ${itemIndex}, this.value)">
                                 ${assignees.map(a => `<option value="${a}" ${assignee === a ? 'selected' : ''}>${a || 'Не назначен'}</option>`).join('')}
                             </select>
                             <input type="date" 
                                    class="due-date-input"
                                    id="due-date-${key}"
                                    value="${dueDate}"
-                                   onchange="changeDueDate(${sectionIndex}, ${itemIndex}, this.value)"
-                                   ${isEditMode ? '' : 'disabled'}>
+                                   onchange="changeDueDate(${sectionIndex}, ${itemIndex}, this.value)">
                             <div class="priority-tag priority-${priority}" 
                                  id="priority-${key}"
-                                 onclick="${isEditMode ? `changePriority(${sectionIndex}, ${itemIndex})` : ''}"
-                                 style="cursor: ${isEditMode ? 'pointer' : 'default'}">
+                                 onclick="changePriority(${sectionIndex}, ${itemIndex})"
+                                 style="cursor: pointer">
                                 ${priorityLabels[priority]}
                             </div>
                             <div class="item-actions">
@@ -2133,6 +2294,7 @@
                                    id="add-input-${sectionIndex}" 
                                    placeholder="Добавить новый пункт..."
                                    onkeypress="if(event.key==='Enter') addItem(${sectionIndex})">
+                            <select disabled><option>-</option></select>
                             <select disabled><option>Не назначен</option></select>
                             <input type="date" disabled>
                             <div class="priority-tag priority-optional">Опционально</div>
@@ -2152,6 +2314,7 @@
             updateAssignees();
             updateDueDates();
             updatePriorities();
+            updateExecutions();
         }
         
         // Initialize
