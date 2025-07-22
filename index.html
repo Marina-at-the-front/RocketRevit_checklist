@@ -1222,6 +1222,49 @@
         function loadFromFirebase() {
             if (!database) return;
             
+            // Load checklist structure first
+            const structureRef = database.ref('rocketrevit-structure');
+            structureRef.once('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    checklistData = data;
+                }
+                
+                // After structure is loaded, load all other data
+                Promise.all([
+                    database.ref('rocketrevit-checklist').once('value'),
+                    database.ref('rocketrevit-comments').once('value'),
+                    database.ref('rocketrevit-assignees').once('value'),
+                    database.ref('rocketrevit-duedates').once('value'),
+                    database.ref('rocketrevit-priorities').once('value'),
+                    database.ref('rocketrevit-executions').once('value')
+                ]).then(([checklistSnap, commentsSnap, assigneesSnap, dueDatesSnap, prioritiesSnap, executionsSnap]) => {
+                    // Load all data
+                    checkedItems = checklistSnap.val() || {};
+                    itemComments = commentsSnap.val() || {};
+                    itemAssignees = assigneesSnap.val() || {};
+                    itemDueDates = dueDatesSnap.val() || {};
+                    itemPriorities = prioritiesSnap.val() || {};
+                    itemExecutions = executionsSnap.val() || {};
+                    
+                    // Now render sections and update progress
+                    renderSections();
+                    updateProgress();
+                    
+                    // Set up listeners for real-time updates
+                    setupFirebaseListeners();
+                }).catch(error => {
+                    console.error('Error loading data:', error);
+                    renderSections();
+                    updateProgress();
+                });
+            });
+        }
+        
+        // Set up Firebase listeners for real-time updates
+        function setupFirebaseListeners() {
+            if (!database) return;
+            
             // Load checklist structure
             const structureRef = database.ref('rocketrevit-structure');
             structureRef.on('value', (snapshot) => {
@@ -1315,6 +1358,7 @@
                     itemExecutions = {};
                 }
                 updateExecutions();
+                updateProgress(); // Update progress when executions are loaded
             });
         }
         
