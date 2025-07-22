@@ -1,4 +1,22 @@
-<!DOCTYPE html>
+// Initialize empty data structure in Firebase
+        function initializeFirebaseStructure() {
+            if (!database || !isOnline) return;
+            
+            const updates = {};
+            updates['rocketrevit-checklist'] = {};
+            updates['rocketrevit-structure'] = checklistData;
+            updates['rocketrevit-comments'] = {};
+            updates['rocketrevit-assignees'] = {};
+            updates['rocketrevit-duedates'] = {};
+            updates['rocketrevit-priorities'] = {};
+            updates['rocketrevit-executions'] = {};
+            
+            database.ref().update(updates)
+                .then(() => {
+                    console.log('Firebase structure initialized');
+                })
+                .catch((error) => {
+                    console.error('Error initializing Firebase structure:', error);<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -1413,6 +1431,22 @@
             });
         }
         
+        // Save to Firebase
+        function saveToFirebase() {
+            if (!database || !isOnline) return;
+            
+            updateSyncStatus('syncing');
+            
+            database.ref('rocketrevit-checklist').set(checkedItems || {})
+                .then(() => {
+                    updateSyncStatus();
+                })
+                .catch((error) => {
+                    console.error('Save error:', error);
+                    updateSyncStatus('error');
+                });
+        }
+        
         // Save all data to Firebase
         function saveAllToFirebase() {
             if (!database || !isOnline) return;
@@ -1579,12 +1613,27 @@
                     localStorage.removeItem('rocketRevitExecutions');
                     localStorage.removeItem('rocketRevitComments');
                 } else if (database) {
-                    database.ref('rocketrevit-checklist').set({});
-                    database.ref('rocketrevit-assignees').set({});
-                    database.ref('rocketrevit-duedates').set({});
-                    database.ref('rocketrevit-priorities').set({});
-                    database.ref('rocketrevit-executions').set({});
-                    database.ref('rocketrevit-comments').set({});
+                    // Force create proper structure in Firebase
+                    const updates = {};
+                    updates['/rocketrevit-checklist'] = {};
+                    updates['/rocketrevit-structure'] = checklistData;
+                    updates['/rocketrevit-comments'] = {};
+                    updates['/rocketrevit-assignees'] = {};
+                    updates['/rocketrevit-duedates'] = {};
+                    updates['/rocketrevit-priorities'] = {};
+                    updates['/rocketrevit-executions'] = {};
+                    
+                    database.ref().update(updates)
+                        .then(() => {
+                            console.log('Firebase reset successful');
+                            renderSections();
+                            updateProgress();
+                        })
+                        .catch((error) => {
+                            console.error('Firebase reset error:', error);
+                            alert('Ошибка сброса данных. Попробуйте переключиться на локальное хранение.');
+                        });
+                    return;
                 }
                 
                 renderSections();
@@ -1751,19 +1800,11 @@
             if (useLocal) {
                 saveToLocal();
             } else {
-                saveAllToFirebase();
+                database.ref('rocketrevit-executions').set(itemExecutions || {})
+                    .catch((error) => console.error('Save executions error:', error));
             }
             
             updateProgress();
-        }
-        
-        // Save executions to Firebase
-        function saveExecutionsToFirebase() {
-            if (!database || !isOnline) return;
-            database.ref('rocketrevit-executions').set(itemExecutions)
-                .catch((error) => {
-                    console.error('Save executions error:', error);
-                });
         }
         
         // Change assignee
@@ -1778,7 +1819,8 @@
             if (useLocal) {
                 saveToLocal();
             } else {
-                saveAllToFirebase();
+                database.ref('rocketrevit-assignees').set(itemAssignees || {})
+                    .catch((error) => console.error('Save assignees error:', error));
             }
         }
         
@@ -1800,7 +1842,8 @@
             if (useLocal) {
                 saveToLocal();
             } else {
-                saveAllToFirebase();
+                database.ref('rocketrevit-duedates').set(itemDueDates || {})
+                    .catch((error) => console.error('Save due dates error:', error));
             }
         }
         
@@ -1843,7 +1886,8 @@
             if (useLocal) {
                 saveToLocal();
             } else {
-                saveAllToFirebase();
+                database.ref('rocketrevit-priorities').set(itemPriorities || {})
+                    .catch((error) => console.error('Save priorities error:', error));
             }
         }
         
@@ -1854,33 +1898,6 @@
                 priorityEl.className = `priority-tag priority-${priority}`;
                 priorityEl.textContent = priorityLabels[priority];
             }
-        }
-        
-        // Save assignees to Firebase
-        function saveAssigneesToFirebase() {
-            if (!database || !isOnline) return;
-            database.ref('rocketrevit-assignees').set(itemAssignees)
-                .catch((error) => {
-                    console.error('Save assignees error:', error);
-                });
-        }
-        
-        // Save due dates to Firebase
-        function saveDueDatesToFirebase() {
-            if (!database || !isOnline) return;
-            database.ref('rocketrevit-duedates').set(itemDueDates)
-                .catch((error) => {
-                    console.error('Save due dates error:', error);
-                });
-        }
-        
-        // Save priorities to Firebase
-        function savePrioritiesToFirebase() {
-            if (!database || !isOnline) return;
-            database.ref('rocketrevit-priorities').set(itemPriorities)
-                .catch((error) => {
-                    console.error('Save priorities error:', error);
-                });
         }
         
         // Apply sort and filter
@@ -2081,7 +2098,7 @@
             if (useLocal) {
                 saveToLocal();
             } else {
-                saveAllToFirebase();
+                saveToFirebase();
             }
         }
         
@@ -2142,7 +2159,8 @@
                 if (useLocal) {
                     saveToLocal();
                 } else {
-                    saveAllToFirebase();
+                    database.ref('rocketrevit-comments').set(itemComments || {})
+                        .catch((error) => console.error('Save comments error:', error));
                 }
                 
                 // Re-render comments
@@ -2163,22 +2181,14 @@
                     if (useLocal) {
                         saveToLocal();
                     } else {
-                        saveAllToFirebase();
+                        database.ref('rocketrevit-comments').set(itemComments || {})
+                            .catch((error) => console.error('Save comments error:', error));
                     }
                     
                     renderComments(sectionIndex, itemIndex);
                     updateCommentIndicator(sectionIndex, itemIndex);
                 }
             }
-        }
-        
-        function saveCommentsToFirebase() {
-            if (!database || !isOnline) return;
-            
-            database.ref('rocketrevit-comments').set(itemComments)
-                .catch((error) => {
-                    console.error('Save comments error:', error);
-                });
         }
         
         function getLastComment(key) {
