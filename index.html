@@ -16,7 +16,9 @@
                     console.log('Firebase structure initialized');
                 })
                 .catch((error) => {
-                    console.error('Error initializing Firebase structure:', error);<!DOCTYPE html>
+                    console.error('Error initializing Firebase structure:', error);
+                });
+        }<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -1799,7 +1801,7 @@
             
             if (useLocal) {
                 saveToLocal();
-            } else {
+            } else if (database && isOnline) {
                 database.ref('rocketrevit-executions').set(itemExecutions || {})
                     .catch((error) => console.error('Save executions error:', error));
             }
@@ -1818,7 +1820,7 @@
             
             if (useLocal) {
                 saveToLocal();
-            } else {
+            } else if (database && isOnline) {
                 database.ref('rocketrevit-assignees').set(itemAssignees || {})
                     .catch((error) => console.error('Save assignees error:', error));
             }
@@ -1841,7 +1843,7 @@
             
             if (useLocal) {
                 saveToLocal();
-            } else {
+            } else if (database && isOnline) {
                 database.ref('rocketrevit-duedates').set(itemDueDates || {})
                     .catch((error) => console.error('Save due dates error:', error));
             }
@@ -1885,7 +1887,7 @@
             
             if (useLocal) {
                 saveToLocal();
-            } else {
+            } else if (database && isOnline) {
                 database.ref('rocketrevit-priorities').set(itemPriorities || {})
                     .catch((error) => console.error('Save priorities error:', error));
             }
@@ -2158,7 +2160,7 @@
                 // Save
                 if (useLocal) {
                     saveToLocal();
-                } else {
+                } else if (database && isOnline) {
                     database.ref('rocketrevit-comments').set(itemComments || {})
                         .catch((error) => console.error('Save comments error:', error));
                 }
@@ -2180,7 +2182,7 @@
                     
                     if (useLocal) {
                         saveToLocal();
-                    } else {
+                    } else if (database && isOnline) {
                         database.ref('rocketrevit-comments').set(itemComments || {})
                             .catch((error) => console.error('Save comments error:', error));
                     }
