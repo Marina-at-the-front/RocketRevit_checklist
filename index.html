@@ -1,24 +1,4 @@
-// Initialize empty data structure in Firebase
-        function initializeFirebaseStructure() {
-            if (!database || !isOnline) return;
-            
-            const updates = {};
-            updates['rocketrevit-checklist'] = {};
-            updates['rocketrevit-structure'] = checklistData;
-            updates['rocketrevit-comments'] = {};
-            updates['rocketrevit-assignees'] = {};
-            updates['rocketrevit-duedates'] = {};
-            updates['rocketrevit-priorities'] = {};
-            updates['rocketrevit-executions'] = {};
-            
-            database.ref().update(updates)
-                .then(() => {
-                    console.log('Firebase structure initialized');
-                })
-                .catch((error) => {
-                    console.error('Error initializing Firebase structure:', error);
-                });
-        }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -2030,8 +2010,11 @@
             progressBar.style.width = percentage + '%';
             progressBar.textContent = percentage + '%';
             
-            // Count executing tasks
-            const executingCount = Object.values(itemExecutions).filter(exec => exec === 'Выполняем').length;
+            // Count executing tasks - проверяем, что объект не пустой
+            let executingCount = 0;
+            if (itemExecutions && typeof itemExecutions === 'object') {
+                executingCount = Object.values(itemExecutions).filter(exec => exec === 'Выполняем').length;
+            }
             
             // Update stats
             document.getElementById('totalTasks').textContent = total;
@@ -2447,6 +2430,9 @@
             updateDueDates();
             updatePriorities();
             updateExecutions();
+            
+            // Update progress after all data is loaded
+            updateProgress();
             
             // Force update of due date status for all items
             checklistData.forEach((section, sectionIndex) => {
